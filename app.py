@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+from src.helpers import parse_docx
+from src.analyzer import Analyzer
 
 app = Flask(__name__)
 
@@ -42,6 +44,17 @@ def docx_post():
     if ".docx" not in file.filename:
         raise Error("The document has to be in docx format", 415)
 
+    document = None
+    try:
+        document = parse_docx(file)
+    except:
+        raise Error("Could not parse the supplied document.", 400)
+
+    analyser = Analyzer(document)
+    analyser.run()
+
+    if analyser.has_errors():
+        return jsonify(analyser.errors)
     return "OK"
 
 
