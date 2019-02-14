@@ -47,16 +47,6 @@ class Analyzer:
             return True
         return False
 
-    def test_headline(self):
-        for headline in self.document:
-            if not headline in self.headlines:
-                self.add_error("{} är inte en valid rubrik enligt polisens direktiv".format(headline))
-
-    def test_headline_case(self):
-        for headline in self.document:
-            if not headline.isupper():
-                self.add_error("Rubriken {} är inte skriven i varsaler".format(headline))
-
     def run(self):
         tests = [self.test_headline_case, self.test_headline]
 
@@ -64,3 +54,19 @@ class Analyzer:
             if self.stop_on_error and self.has_errors():
                 break
             test()
+
+    def test_headline(self):
+        for headline in self.document:
+            if not headline in self.headlines:
+                self.add_error(
+                    "{} är inte en valid rubrik enligt polisens direktiv".format(
+                        headline
+                    )
+                )
+
+    def test_headline_case(self):
+        for headline in self.document:
+            if not headline.isupper():
+                self.add_error(
+                    "Rubriken {} är inte skriven i varsaler".format(headline)
+                )
