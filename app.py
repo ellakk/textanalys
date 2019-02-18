@@ -3,6 +3,7 @@ from src.helpers import parse_docx
 from src.analyzer import Analyzer
 
 app = Flask(__name__)
+app.config["JSON_AS_ASCII"] = False
 
 
 class Error(Exception):
