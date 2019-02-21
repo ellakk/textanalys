@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from src.helpers import parse_docx
 from src.analyzer import Analyzer
 
@@ -31,7 +31,7 @@ def handle_error(error):
 
 @app.route("/")
 def hello():
-    return "Hello World!"
+    return render_template("index.html")
 
 
 @app.route("/api/docx", methods=["POST"])
