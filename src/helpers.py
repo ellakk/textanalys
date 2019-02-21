@@ -8,9 +8,7 @@ from docx import Document
 def parse_docx(docx):
     """Parse a docx file. Argument to parameter docx has to be a file handle.
     Returns an ordered dictionary where the keys are the headlines and the
-    values are lists containing all the paragraph under each headline.
-
-    """
+    values are lists containing all the paragraph under each headline."""
     source_stream = BytesIO(docx.read())
     document = Document(source_stream)
     source_stream.close()

@@ -1,4 +1,6 @@
 class Analyzer:
+    """Class for analysing documents."""
+
     # All headlines
     headlines = {
         "INLEDNING": {"order": 1, "required": True, "dependencies": []},
@@ -35,27 +37,35 @@ class Analyzer:
     }
 
     def __init__(self, document, stop_on_error=False):
+        """Instantiate the object. The document argument is a dict where the keys are
+        the header of the documents and the value is a list of paragraphs under the
+        heading."""
         self.document = document
         self.errors = []
         self.stop_on_error = stop_on_error
 
     def add_error(self, message, headline=None):
+        """Add an error to the error list."""
         self.errors.append({"message": message, "headline": headline})
 
     def has_errors(self):
+        """Returns a boolean representing if the analyzer has found errors or not."""
         if self.errors:
             return True
         return False
 
     def run(self):
-        tests = [self.test_headline_case, self.test_headline]
+        """Runs a full analysis on the document."""
+        tests = [self.test_headers_case, self.test_headers]
 
         for test in tests:
             if self.stop_on_error and self.has_errors():
                 break
             test()
 
-    def test_headline(self):
+    def test_headers(self):
+        """Test to make sure the headers exists in the list of headers predefined by
+        the police."""
         for headline in self.document:
             if not headline in self.headlines:
                 self.add_error(
@@ -64,7 +74,8 @@ class Analyzer:
                     )
                 )
 
-    def test_headline_case(self):
+    def test_headers_case(self):
+        """Test to make sure the headers are written in uppercase."""
         for headline in self.document:
             if not headline.isupper():
                 self.add_error(

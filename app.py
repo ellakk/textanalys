@@ -7,6 +7,7 @@ app.config["JSON_AS_ASCII"] = False
 
 
 class APIError(Exception):
+    "Class for handling error responses for the API."
     status_code = 400
 
     def __init__(self, message, status_code=None, payload=None):
@@ -24,6 +25,7 @@ class APIError(Exception):
 
 @app.errorhandler(APIError)
 def handle_error(error):
+    """Method for handling API error responses."""
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
@@ -31,6 +33,8 @@ def handle_error(error):
 
 @app.route("/", methods=["GET", "POST"])
 def start():
+    """This route serves both the main index.html template and the result of the
+    analysis template."""
     if request.method == "GET":
         return render_template("index.html")
 
@@ -45,8 +49,10 @@ def start():
         return jsonify(analyser.errors)
     return "OK"
 
+
 @app.route("/api/docx", methods=["POST"])
 def docx_post():
+    """This is the API route to analyze docx files."""
     if len(request.files) != 1:
         raise APIError("You need to post exactly one file.")
     if "file" not in request.files:
