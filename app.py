@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from src.helpers import parse_docx
+from src.helpers import parse_docx, create_response
 from src.analyzer import Analyzer
 
 app = Flask(__name__)
@@ -18,9 +18,7 @@ class APIError(Exception):
         self.payload = payload
 
     def to_dict(self):
-        rv = dict(self.payload or ())
-        rv["message"] = self.message
-        return rv
+        return create_response(self.message, self.status_code)
 
 
 @app.errorhandler(APIError)
@@ -31,49 +29,39 @@ def handle_error(error):
     return response
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def start():
     """This route serves both the main index.html template and the result of the
     analysis template."""
-    if request.method == "GET":
-        return render_template("index.html")
-
-    # TODO: Add custom error handler for webapp
-    file = request.files["file"]
-    document = parse_docx(file)
-
-    analyser = Analyzer(document)
-    analyser.run()
-
-    if analyser.has_errors():
-        return jsonify(analyser.errors)
-    return "OK"
+    return render_template("index.html")
 
 
 @app.route("/api/docx", methods=["POST"])
 def docx_post():
     """This is the API route to analyze docx files."""
     if len(request.files) != 1:
-        raise APIError("You need to post exactly one file.")
+        raise APIError("Du måste POSTa exakt en fil.")
     if "file" not in request.files:
-        raise APIError("The document need to be POSTed as a file.")
+        raise APIError("Dokumentet måste POSTas som en fil.")
 
     file = request.files["file"]
     if ".docx" not in file.filename:
-        raise APIError("The document has to be in docx format", 415)
+        raise APIError("Dokumentet måste vara i docx format", 415)
 
     document = None
     try:
         document = parse_docx(file)
     except:
-        raise APIError("Could not parse the supplied document.", 400)
+        raise APIError("Kunde inte läsa dokumentet.", 400)
 
     analyser = Analyzer(document)
     analyser.run()
 
     if analyser.has_errors():
-        return jsonify(analyser.errors)
-    return "OK"
+        return jsonify(create_response(
+            f"Hittade {len(analyser.errors)} fel i dokumentet.",
+            data=analyser.errors))
+    return jsonify(create_response("Inga fel hittades i dokumentet."))
 
 
 if __name__ == "__main__":
