@@ -12,31 +12,28 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="static/script.js"></script>
   <link rel="stylesheet" href="static/style.css">
 </head>
 
 <body>
   <div class="container">
-    <div class="row">
-    </div>
-    <div class="row wallpaper-content pt-lg-6 pb-lg-6 pt-5">
-      <div class="col-md-3 col-sm-0">
-      </div>
-      <div class="col-md-8 col-sm-12">
-        <h1 class="text-uppercase text-center-md-left">Rättsäker Textanalys</h1>
-      </div>
-      <div class="col-md-3 col-sm-0">
-      </div>
-      <div class="col-md-2 col-sm-0">
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <form action="/" method="POST" enctype="multipart/form-data">
-          <input type="file" name="file" id="fileToUpload">
-          <input type="submit" value="Ladda Upp"  name="submit">
+    <div class="jumbotron">
+      <h1 class="display-4">Rättsäker Textanalys</h1>
+      <p class="lead">Detta är en webbapplikation skapad av Henrik Svensson och
+      Kalle Lindqvist för deras examensarbete.
+      Examensarbetet går ut på att vi har skrivit ett program som analyserar
+      polisrapporter och rapporterar de fel som hittas.</p>
+      <hr class="my-4">
+      <p>Välj en polisrapport i .docx-format och tryck analysera för att göra en analys.</p>
+      <p class="lead">
+        <form class="form-inline" id="docxForm">
+          <div class="form-group mx-sm-3 mb-2">
+            <input type="file" class="form-control-file" id="docxSelector">
+          </div>
+          <button type="submit" class="btn btn-primary mb-2" id="submitButton">Analysera</button>
         </form>
-      </div>
-      <div class="col-md-2 col-sm-0">
-      </div>
+      </p>
     </div>
   </div>
 </body>
