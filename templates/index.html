@@ -19,7 +19,7 @@
 <body>
   <div class="container">
     <div class="jumbotron">
-      <h1 class="display-4">Rättsäker Textanalys</h1>
+      <h1 class="display-3">Rättsäker Textanalys</h1>
       <p class="lead">Detta är en webbapplikation skapad av Henrik Svensson och
       Kalle Lindqvist för deras examensarbete.
       Examensarbetet går ut på att vi har skrivit ett program som analyserar
@@ -34,7 +34,21 @@
           <button type="submit" class="btn btn-primary mb-2" id="submitButton">Analysera</button>
         </form>
       </p>
+      <hr class="my-4">
+      <h2 class="display-4">Analys</h2>
+      <table class="table table-striped" id="analysisTable">
+        <caption id="analysisTableCaption"></caption>
+        <thead>
+          <tr>
+            <th scope="col">Rubrik</th>
+            <th scope="col">Fel</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
     </div>
+
   </div>
 </body>
 
