@@ -69,15 +69,10 @@ class Analyzer:
         for headline in self.document:
             if not headline in self.headlines:
                 self.add_error(
-                    "{} är inte en valid rubrik enligt polisens direktiv".format(
-                        headline
-                    )
-                )
+                    f"{headline} är inte en valid rubrik enligt polisens direktiv.", headline)
 
     def test_headers_case(self):
         """Test to make sure the headers are written in uppercase."""
         for headline in self.document:
             if not headline.isupper():
-                self.add_error(
-                    "Rubriken {} är inte skriven i varsaler".format(headline)
-                )
+                self.add_error(f"Rubriken {headline} är inte skriven i varsaler", headline)
