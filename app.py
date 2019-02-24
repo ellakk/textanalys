@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify, render_template
 from src.helpers import parse_docx, create_response
 from src.analyzer import Analyzer
 
-app = Flask(__name__)
-app.config["JSON_AS_ASCII"] = False
+APP = Flask(__name__)
+APP.config["JSON_AS_ASCII"] = False
 
 
 class APIError(Exception):
@@ -21,7 +21,7 @@ class APIError(Exception):
         return create_response(self.message, self.status_code)
 
 
-@app.errorhandler(APIError)
+@APP.errorhandler(APIError)
 def handle_error(error):
     """Method for handling API error responses."""
     response = jsonify(error.to_dict())
@@ -29,14 +29,14 @@ def handle_error(error):
     return response
 
 
-@app.route("/", methods=["GET"])
+@APP.route("/", methods=["GET"])
 def start():
     """This route serves both the main index.html template and the result of the
     analysis template."""
     return render_template("index.html")
 
 
-@app.route("/api/docx", methods=["POST"])
+@APP.route("/api/docx", methods=["POST"])
 def docx_post():
     """This is the API route to analyze docx files."""
     if len(request.files) != 1:
@@ -65,4 +65,4 @@ def docx_post():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    APP.run(debug=True)
