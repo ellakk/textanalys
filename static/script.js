@@ -1,3 +1,6 @@
+// Declare globals to satisfy standardJS
+/* global XMLHttpRequest FormData alert */
+
 window.addEventListener('load', () => {
   const sendData = () => {
     var XHR = new XMLHttpRequest()
@@ -24,7 +27,6 @@ window.addEventListener('load', () => {
   // take over the forms its submit event.
   form.addEventListener('submit', function (event) {
     event.preventDefault()
-
     sendData()
   })
 })
