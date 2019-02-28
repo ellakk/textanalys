@@ -56,23 +56,29 @@ class Analyzer:
 
     def run(self):
         """Runs a full analysis on the document."""
-        tests = [self.test_headers_case, self.test_headers]
+        tests = [self.test_headlines_case, self.test_headlines, self.test_headlines_required]
 
         for test in tests:
             if self.stop_on_error and self.has_errors():
                 break
             test()
 
-    def test_headers(self):
-        """Test to make sure the headers exists in the list of headers predefined by
+    def test_headlines(self):
+        """Test to make sure the headlines exists in the list of headlines predefined by
         the police."""
         for headline in self.document:
             if not headline in self.headlines:
                 self.add_error(
                     f"{headline} är inte en valid rubrik enligt polisens direktiv.", headline)
 
-    def test_headers_case(self):
-        """Test to make sure the headers are written in uppercase."""
+    def test_headlines_case(self):
+        """Test to make sure the headlines are written in uppercase."""
         for headline in self.document:
             if not headline.isupper():
                 self.add_error(f"Rubriken {headline} är inte skriven i varsaler", headline)
+
+    def test_headlines_required(self):
+        """Make sure required headlines are present."""
+        for headline, config in self.headlines.items():
+            if config['required'] and headline not in self.document:
+                self.add_error(f"Rubriken {headline} som måste vara med saknas.")
