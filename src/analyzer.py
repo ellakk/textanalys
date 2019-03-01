@@ -67,7 +67,7 @@ class Analyzer:
         """Test to make sure the headlines exists in the list of headlines predefined by
         the police."""
         for headline in self.document:
-            if not headline in self.headlines:
+            if not headline.upper() in self.headlines:
                 self.add_error(
                     f"{headline} är inte en valid rubrik enligt polisens direktiv.", headline)
 
