@@ -157,11 +157,17 @@ class Analyzer:
         """Test to make sure the headlines exists in the list of headlines predefined by
         the police."""
         for headline in self.document:
-            if not headline.upper() in self.headlines:
+            is_match = False
+            for rules in self.headlines.values():
+                if rules['regex'].match(headline):
+                    is_match = True
+                    break
+            if not is_match:
                 self.add_error(
                     f"{headline} är inte en valid rubrik enligt polisens direktiv.",
                     headline,
                 )
+
 
     def test_headlines_case(self):
         """Test to make sure the headlines are written in uppercase."""
