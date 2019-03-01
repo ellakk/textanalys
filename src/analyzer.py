@@ -5,7 +5,7 @@ class Analyzer:
     """Class for analysing documents."""
 
     # All headlines
-    headlines = {
+    rules = {
         "INLEDNING": {
             "regex": re.compile(r"inledning", re.I),
             "order": 1,
@@ -158,8 +158,8 @@ class Analyzer:
         the police."""
         for headline in self.document:
             is_match = False
-            for rules in self.headlines.values():
-                if rules['regex'].match(headline):
+            for rules in self.rules.values():
+                if rules["regex"].match(headline):
                     is_match = True
                     break
             if not is_match:
