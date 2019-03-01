@@ -168,7 +168,6 @@ class Analyzer:
                     headline,
                 )
 
-
     def test_headlines_case(self):
         """Test to make sure the headlines are written in uppercase."""
         for headline in self.document:
@@ -179,6 +178,13 @@ class Analyzer:
 
     def test_headlines_required(self):
         """Make sure required headlines are present."""
-        for headline, config in self.headlines.items():
-            if config["required"] and headline not in self.document:
-                self.add_error(f"Rubriken {headline} som måste vara med saknas.")
+        for rule, rules in self.rules.items():
+            if not rules["required"]:
+                continue
+            is_match = False
+            for headline in self.document:
+                if rules["regex"].match(headline):
+                    is_match = True
+                    break
+            if not is_match:
+                self.add_error(f"Rubriken {rule} som måste vara med saknas.")
