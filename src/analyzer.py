@@ -13,7 +13,7 @@ class Analyzer:
             "dependencies": [],
         },
         "BROTTET": {
-            "regex": re.compile(r"brott|brottet", re.I),
+            "regex": re.compile(r"brottet", re.I),
             "order": 2,
             "required": False,
             "dependencies": [],
@@ -28,7 +28,7 @@ class Analyzer:
             "regex": re.compile(r"signalement", re.I),
             "order": 5,
             "required": False,
-            "dependencies": [],
+            "dependencies": [["BROTTET", "BROTTEN", "HÄNDELSEN"]],
         },
         "SKADOR": {
             "regex": re.compile(r"skador", re.I),
@@ -134,11 +134,29 @@ class Analyzer:
         """Add an error to the error list."""
         self.errors.append({"message": message, "headline": headline})
 
+    def get_headline_rules(self, headline):
+        """Return the rules for headline if found."""
+        for rules in self.rules.values():
+            if rules["regex"].match(headline):
+                return rules
+        return {}
+
     def has_errors(self):
         """Returns a boolean representing if the analyzer has found errors or not."""
         if self.errors:
             return True
         return False
+
+    def headline_has_dependencies(self, dependencies):
+        """Validates a list of dependencies, returns true if atleast one exist in the
+        document.
+        """
+        for dependency in dependencies:
+            for headline in self.document:
+                print(dependency)
+                if self.rules[dependency]["regex"].match(headline):
+                    return True
+                return False
 
     def run(self):
         """Runs a full analysis on the document."""
@@ -146,6 +164,7 @@ class Analyzer:
             self.test_headlines_case,
             self.test_headlines,
             self.test_headlines_required,
+            self.test_headlines_dependencies,
         ]
 
         for test in tests:
@@ -188,3 +207,19 @@ class Analyzer:
                     break
             if not is_match:
                 self.add_error(f"Rubriken {rule} som måste vara med saknas.")
+
+    def test_headlines_dependencies(self):
+        """Test if the headlines dependencies are satified."""
+        for headline in self.document:
+            rules = self.get_headline_rules(headline)
+            if not rules:
+                continue
+
+            for dependency in rules["dependencies"]:
+                if not self.headline_has_dependencies(dependency):
+                    dlist = ", ".join(dependency)
+                    self.add_error(
+                        f"Rubriken {headline} kräver att en av följande "
+                        f"rubriker finns med i dokumentet: {dlist}.",
+                        headline,
+                    )
