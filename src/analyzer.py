@@ -235,7 +235,9 @@ class Analyzer:
 
             last_order, last_headline = last
             if last_order > rules["order"]:
-                self.add_error(f"Rubriken {headline} ska komma före rubriken "
-                               f"{last_headline}.", headline)
+                self.add_error(
+                    f"Rubriken {headline} ska komma före rubriken {last_headline}.",
+                    headline,
+                )
 
             last = (rules["order"], headline)
