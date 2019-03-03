@@ -165,6 +165,7 @@ class Analyzer:
             self.test_headlines,
             self.test_headlines_required,
             self.test_headlines_dependencies,
+            self.test_headlines_order,
         ]
 
         for test in tests:
@@ -223,3 +224,19 @@ class Analyzer:
                         f"rubriker finns med i dokumentet: {dlist}.",
                         headline,
                     )
+
+    def test_headlines_order(self):
+        """Test if the headlines are in correct order."""
+        last = (0, "")
+
+        for headline in self.document:
+            rules = self.get_headline_rules(headline)
+            if (not rules) or (rules["order"] == -1):
+                continue
+
+            last_order, last_headline = last
+            if last_order > rules["order"]:
+                self.add_error(f"Rubriken {headline} ska komma före rubriken "
+                               f"{last_headline}.", headline)
+
+            last = (rules["order"], headline)
