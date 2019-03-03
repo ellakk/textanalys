@@ -38,9 +38,9 @@ class Analyzer:
         },
         "BROTTSPLATSUNDERSÖKNING": {
             "regex": re.compile(r"brottsplatsundersökning", re.I),
-            "order": None,
+            "order": -1,
             "required": False,
-            "dependencies": [],
+            "dependencies": [["BROTTET", "BROTTEN"]],
         },
         "TVÅNGSMEDEL": {
             "regex": re.compile(r"tvångsmedel", re.I),
@@ -86,7 +86,7 @@ class Analyzer:
         },
         "HÄNDELSEN": {
             "regex": re.compile(r"händelsen", re.I),
-            "order": 3,
+            "order": 2,
             "required": False,
             "dependencies": [],
         },
@@ -116,7 +116,7 @@ class Analyzer:
         },
         "VITTNESIAKTTAGELSER": {
             "regex": re.compile(r"vittnesiakttagelser", re.I),
-            "order": 1,
+            "order": 3,
             "required": False,
             "dependencies": [],
         },
@@ -153,10 +153,9 @@ class Analyzer:
         """
         for dependency in dependencies:
             for headline in self.document:
-                print(dependency)
                 if self.rules[dependency]["regex"].match(headline):
                     return True
-                return False
+        return False
 
     def run(self):
         """Runs a full analysis on the document."""
