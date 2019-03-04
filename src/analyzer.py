@@ -61,7 +61,7 @@ class Analyzer:
             "dependencies": [],
         },
         "BILAGOR": {
-            "regex": re.compile(r"bilagor", re.I),
+            "regex": re.compile(r"bilagor|bilaga", re.I),
             "order": -1,
             "required": False,
             "dependencies": [],
