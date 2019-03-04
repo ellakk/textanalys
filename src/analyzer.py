@@ -192,7 +192,7 @@ class Analyzer:
         for headline in self.document:
             if not headline.isupper():
                 self.add_error(
-                    f"Rubriken {headline} är inte skriven i varsaler", headline
+                    f"Rubriken {headline} är inte skriven i versaler", headline
                 )
 
     def test_headlines_required(self):
