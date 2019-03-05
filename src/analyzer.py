@@ -122,11 +122,11 @@ class Analyzer:
         },
     }
 
-    def __init__(self, document, stop_on_error=False):
-        """Instantiate the object. The document argument is a dict where the keys are
+    def __init__(self, report, stop_on_error=False):
+        """Instantiate the object. The report argument is a dict where the keys are
         the header of the documents and the value is a list of paragraphs under the
         heading."""
-        self.document = document
+        self.report = report
         self.errors = []
         self.stop_on_error = stop_on_error
 
@@ -152,7 +152,7 @@ class Analyzer:
         document.
         """
         for dependency in dependencies:
-            for headline in self.document:
+            for headline in self.report.headlines():
                 if self.rules[dependency]["regex"].match(headline):
                     return True
         return False
@@ -175,7 +175,7 @@ class Analyzer:
     def test_headlines(self):
         """Test to make sure the headlines exists in the list of headlines predefined by
         the police."""
-        for headline in self.document:
+        for headline in self.report.headlines():
             is_match = False
             for rules in self.rules.values():
                 if rules["regex"].match(headline):
@@ -189,7 +189,7 @@ class Analyzer:
 
     def test_headlines_case(self):
         """Test to make sure the headlines are written in uppercase."""
-        for headline in self.document:
+        for headline in self.report.headlines():
             if not headline.isupper():
                 self.add_error(
                     f"Rubriken {headline} är inte skriven i varsaler", headline
@@ -201,7 +201,7 @@ class Analyzer:
             if not rules["required"]:
                 continue
             is_match = False
-            for headline in self.document:
+            for headline in self.report.headlines():
                 if rules["regex"].match(headline):
                     is_match = True
                     break
@@ -210,7 +210,7 @@ class Analyzer:
 
     def test_headlines_dependencies(self):
         """Test if the headlines dependencies are satified."""
-        for headline in self.document:
+        for headline in self.report.headlines():
             rules = self.get_headline_rules(headline)
             if not rules:
                 continue
@@ -228,7 +228,7 @@ class Analyzer:
         """Test if the headlines are in correct order."""
         last = (0, "")
 
-        for headline in self.document:
+        for headline in self.report.headlines():
             rules = self.get_headline_rules(headline)
             if (not rules) or (rules["order"] == -1):
                 continue
