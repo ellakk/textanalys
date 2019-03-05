@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
-from src.helpers import parse_docx, create_response
+from src.helpers import create_response
 from src.analyzer import Analyzer
+from src.report import Report
 
 APP = Flask(__name__)
 APP.config["JSON_AS_ASCII"] = False
@@ -48,13 +49,13 @@ def docx_post():
     if ".docx" not in file.filename:
         raise APIError("Dokumentet måste vara i docx format", 415)
 
-    document = None
+    report = None
     try:
-        document = parse_docx(file)
+        report = Report(file)
     except:
         raise APIError("Kunde inte läsa dokumentet.", 400)
 
-    analyser = Analyzer(document)
+    analyser = Analyzer(report)
     analyser.run()
 
     if analyser.has_errors():
