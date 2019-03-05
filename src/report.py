@@ -6,6 +6,7 @@ from docx import Document
 
 
 class Report:
+    """Handles police reports. """
     data = OrderedDict()
     document = None
 
@@ -27,9 +28,11 @@ class Report:
                 self.data[current_headline].append(text)
 
     def headlines(self):
+        """Returns a list of headlines found in the report."""
         return self.data.keys()
 
     def count_sentences(self):
+        """Returns a count of the amount of sentences found in the report."""
         text = self.to_text(headlines=False)
         count = text.count(".")
         # If the last sentence is missing a '.' (bilagor) then we want to count it too
@@ -38,6 +41,7 @@ class Report:
         return count
 
     def to_text(self, headlines=True):
+        """Returns a text representation of the report."""
         text = ""
 
         for headline, paragraphs in self.data.items():
