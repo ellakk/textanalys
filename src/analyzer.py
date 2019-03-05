@@ -61,7 +61,7 @@ class Analyzer:
             "dependencies": [],
         },
         "BILAGOR": {
-            "regex": re.compile(r"bilagor", re.I),
+            "regex": re.compile(r"bilagor|bilaga", re.I),
             "order": -1,
             "required": False,
             "dependencies": [],
@@ -192,7 +192,7 @@ class Analyzer:
         for headline in self.report.headlines():
             if not headline.isupper():
                 self.add_error(
-                    f"Rubriken {headline} är inte skriven i varsaler", headline
+                    f"Rubriken {headline} är inte skriven i versaler", headline
                 )
 
     def test_headlines_required(self):
