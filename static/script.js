@@ -48,7 +48,7 @@ const processData = (JSONdata) => {
 
   if (data.data) {
     data.data.forEach((row) => {
-      table.append('<tr><td>' + (row.headline ? row.headline : 'Ingen') + '</td><td>' + row.message + '</td></tr>')
+      table.append('<tr><td>' + row.start + '-' + row.end + '</td><td>' + row.message + '</td></tr>')
     })
   }
   tableCaption.text(data.message)

@@ -130,9 +130,13 @@ class Analyzer:
         self.errors = []
         self.stop_on_error = stop_on_error
 
-    def add_error(self, message, headline=None):
+    def add_error(self, message, regex=""):
         """Add an error to the error list."""
-        self.errors.append({"message": message, "headline": headline})
+        start, end = 0, 0
+
+        if regex:
+            start, end = self.report.get_regex_position(regex)
+        self.errors.append({"message": message, "start": start, 'end': end})
 
     def get_headline_rules(self, headline):
         """Return the rules for headline if found."""
@@ -184,7 +188,7 @@ class Analyzer:
             if not is_match:
                 self.add_error(
                     f"{headline} är inte en valid rubrik enligt polisens direktiv.",
-                    headline,
+                    regex=headline,
                 )
 
     def test_headlines_case(self):
@@ -192,7 +196,7 @@ class Analyzer:
         for headline in self.report.headlines():
             if not headline.isupper():
                 self.add_error(
-                    f"Rubriken {headline} är inte skriven i versaler", headline
+                    f"Rubriken {headline} är inte skriven i versaler", regex=headline
                 )
 
     def test_headlines_required(self):
@@ -221,7 +225,7 @@ class Analyzer:
                     self.add_error(
                         f"Rubriken {headline} kräver att en av följande "
                         f"rubriker finns med i dokumentet: {dlist}.",
-                        headline,
+                        regex=headline,
                     )
 
     def test_headlines_order(self):
@@ -237,7 +241,7 @@ class Analyzer:
             if last_order > rules["order"]:
                 self.add_error(
                     f"Rubriken {headline} ska komma före rubriken {last_headline}.",
-                    headline,
+                    regex=headline,
                 )
 
             last = (rules["order"], headline)
