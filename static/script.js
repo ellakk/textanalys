@@ -1,6 +1,14 @@
 // Declare globals to satisfy standardJS
 /* global XMLHttpRequest FormData $ */
 
+Object.size = function (obj) {
+  var size = 0; var key
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) size++
+  }
+  return size
+}
+
 /**
  * This code runs after the html code has finished loading.
  */
@@ -29,6 +37,8 @@ const sendAlert = (message) => {
   }, 4000)
 }
 
+
+
 /**
  * Process the API response.
  */
@@ -42,16 +52,18 @@ const processData = (JSONdata) => {
 
   var table = $('#analysisTable')
   var tableCaption = $('#analysisTableCaption')
+  var document = $('#document')
 
   // Clear the table
   table.find('tbody tr').remove()
 
-  if (data.data) {
-    data.data.forEach((row) => {
+  if (data.data.has_errors) {
+    data.data.errors.forEach((row) => {
       table.append('<tr><td>' + row.start + '-' + row.end + '</td><td>' + row.message + '</td></tr>')
     })
   }
-  tableCaption.text(data.message)
+  tableCaption.text('Hittade ' + Object.keys(data.data.errors).length + ' fel.')
+  document.text(data.data.report)
 }
 
 /**

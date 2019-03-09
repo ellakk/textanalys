@@ -58,11 +58,10 @@ def docx_post():
     analyser = Analyzer(report)
     analyser.run()
 
-    if analyser.has_errors():
-        return jsonify(create_response(
-            f"Hittade {len(analyser.errors)} fel i dokumentet.",
-            data=analyser.errors))
-    return jsonify(create_response("Inga fel hittades i dokumentet."))
+    return jsonify(create_response(
+        f"Hittade {len(analyser.errors)} fel i dokumentet.",
+        data=analyser.get_analysis()))
+
 
 
 if __name__ == "__main__":

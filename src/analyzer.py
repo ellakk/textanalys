@@ -136,7 +136,7 @@ class Analyzer:
 
         if regex:
             start, end = self.report.get_regex_position(regex)
-        self.errors.append({"message": message, "start": start, 'end': end})
+        self.errors.append({"message": message, "start": start, "end": end})
 
     def get_headline_rules(self, headline):
         """Return the rules for headline if found."""
@@ -144,6 +144,14 @@ class Analyzer:
             if rules["regex"].match(headline):
                 return rules
         return {}
+
+    def get_analysis(self):
+        """The result of the analysis as a dict. Formatted to be used as an API reponse."""
+        return {
+            "report": self.report.to_text(),
+            "errors": self.errors,
+            "has_errors": self.has_errors(),
+        }
 
     def has_errors(self):
         """Returns a boolean representing if the analyzer has found errors or not."""

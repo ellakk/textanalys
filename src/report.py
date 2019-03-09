@@ -55,6 +55,6 @@ class Report:
         for headline, paragraphs in self.data.items():
             if headlines:
                 text += f"{headline}\n"
-            text += "\n".join(paragraphs) + "\n"
+            text += "\n".join(paragraphs) + "\n\n"
 
         return text
