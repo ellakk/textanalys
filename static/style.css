@@ -16,3 +16,8 @@ pre {
   h1 {
     font-size: 40px; }
  }
+
+mark{
+  background: orange;
+  color: black;
+ }

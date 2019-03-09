@@ -37,8 +37,6 @@ const sendAlert = (message) => {
   }, 4000)
 }
 
-
-
 /**
  * Process the API response.
  */
@@ -59,11 +57,31 @@ const processData = (JSONdata) => {
 
   if (data.data.has_errors) {
     data.data.errors.forEach((row) => {
-      table.append('<tr><td>' + row.start + '-' + row.end + '</td><td>' + row.message + '</td></tr>')
+      table.append('<tr class="error-rows" data-start="' + row.start + '"' +
+                   ' data-end="' + row.end + '"><td>' + row.start + '-' +
+                   row.end + '</td><td>' + row.message + '</td></tr>')
     })
   }
   tableCaption.text('Hittade ' + Object.keys(data.data.errors).length + ' fel.')
   document.text(data.data.report)
+  highlightErrors()
+}
+
+/**
+* Highlight error on hover, uses markjs
+**/
+const highlightErrors = () => {
+  $('.error-rows').hover(
+    function () {
+      var range = {}
+      range.length = $(this).data('end') - $(this).data('start')
+      range.start = $(this).data('start')
+      $('#document').markRanges([range])
+      console.log('fuck')
+    }, function () {
+      $('#document').unmark()
+    }
+  )
 }
 
 /**
