@@ -7,13 +7,12 @@ from docx import Document
 
 class Report:
     """Handles police reports. """
-    data = OrderedDict()
-    document = None
 
     def __init__(self, report):
         """Initialize the report. Argument to parameter report has to be a file handle
         of a .docx file.
         """
+        self.data = OrderedDict()
         source_stream = BytesIO(report.read())
         self.document = Document(source_stream)
         source_stream.close()
@@ -39,6 +38,15 @@ class Report:
         if text.rstrip()[-1] != ".":
             count += 1
         return count
+
+    def get_regex_position(self, regex):
+        """Returns the start and end position of regex."""
+        report = self.to_text()
+
+        match = re.search(regex, report)
+        if match:
+            return match.span()
+        return (0, 0)
 
     def to_text(self, headlines=True):
         """Returns a text representation of the report."""
