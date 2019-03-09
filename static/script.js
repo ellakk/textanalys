@@ -1,6 +1,9 @@
 // Declare globals to satisfy standardJS
 /* global XMLHttpRequest FormData $ */
 
+/**
+ * Add method to count keys in object.
+ */
 Object.size = function (obj) {
   var size = 0; var key
   for (key in obj) {
@@ -65,21 +68,33 @@ const processData = (JSONdata) => {
   tableCaption.text('Hittade ' + Object.keys(data.data.errors).length + ' fel.')
   document.text(data.data.report)
   highlightErrors()
+  changeCursorOnError()
 }
 
 /**
-* Highlight error on hover, uses markjs
+* Highlight error on click, uses markjs
 **/
 const highlightErrors = () => {
-  $('.error-rows').hover(
+  $('.error-rows').click(
     function () {
+      $('#document').unmark()
       var range = {}
       range.length = $(this).data('end') - $(this).data('start')
       range.start = $(this).data('start')
       $('#document').markRanges([range])
-      console.log('fuck')
+    }
+  )
+}
+
+/**
+ * Change cursor when hovering a error in the table so it looks clickable.
+ **/
+const changeCursorOnError = () => {
+  $('.error-rows').hover(
+    function () {
+      $(this).css('cursor', 'pointer')
     }, function () {
-      $('#document').unmark()
+      $(this).css('cursor', 'auto')
     }
   )
 }
