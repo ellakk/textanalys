@@ -65,7 +65,7 @@ class Report:
         return self.data.keys()
 
     def reading_attributes(self):
-        """Returns a dict with: nix, ovix, np with their respective values."""
+        """Returns a dict with: nix, ovix, nk with their respective values."""
         text_node = self.sparv_xml.find("corpus/text")
         return {k: float(v) for (k, v) in text_node.attrib.items()}
 
