@@ -4,8 +4,14 @@ import re
 class Analyzer:
     """Class for analysing documents."""
 
-    # All headlines
-    rules = {
+    reading_attributes_rules = {
+        "lix": {"min": 32.6, "max": 56.7},
+        "ovix": {"min": 47.8, "max": 82.7},
+        "nk": {"min": 0.65, "max": 3.73},
+    }
+
+    # All headline
+    headline_rules = {
         "INLEDNING": {
             "regex": re.compile(r"inledning", re.I),
             "order": 1,
@@ -140,7 +146,7 @@ class Analyzer:
 
     def get_headline_rules(self, headline):
         """Return the rules for headline if found."""
-        for rules in self.rules.values():
+        for rules in self.headline_rules.values():
             if rules["regex"].match(headline):
                 return rules
         return {}
@@ -165,7 +171,7 @@ class Analyzer:
         """
         for dependency in dependencies:
             for headline in self.report.headlines():
-                if self.rules[dependency]["regex"].match(headline):
+                if self.headline_rules[dependency]["regex"].match(headline):
                     return True
         return False
 
@@ -177,6 +183,7 @@ class Analyzer:
             self.test_headlines_required,
             self.test_headlines_dependencies,
             self.test_headlines_order,
+            self.test_reading_attributes,
         ]
 
         for test in tests:
@@ -189,7 +196,7 @@ class Analyzer:
         the police."""
         for headline in self.report.headlines():
             is_match = False
-            for rules in self.rules.values():
+            for rules in self.headline_rules.values():
                 if rules["regex"].match(headline):
                     is_match = True
                     break
@@ -209,7 +216,7 @@ class Analyzer:
 
     def test_headlines_required(self):
         """Make sure required headlines are present."""
-        for rule, rules in self.rules.items():
+        for rule, rules in self.headline_rules.items():
             if not rules["required"]:
                 continue
             is_match = False
@@ -253,3 +260,41 @@ class Analyzer:
                 )
 
             last = (rules["order"], headline)
+
+    def test_reading_attributes(self):
+        """Test if the reading attributes of the text passes the min,max rules of LIX,
+        OVIX and NK."""
+        reading_attributes = self.report.reading_attributes()
+        print(reading_attributes)
+
+        if reading_attributes["lix"] > self.reading_attributes_rules["lix"]["max"]:
+            self.add_error(
+                "LIX värdet för rapporten är högt. Försök korta ner meningarna."
+            )
+
+        if reading_attributes["lix"] < self.reading_attributes_rules["lix"]["min"]:
+            self.add_error(
+                "LIX värdet för rapporten är lågt. Försök skriva längre meningar."
+            )
+
+        if reading_attributes["ovix"] > self.reading_attributes_rules["ovix"]["max"]:
+            self.add_error(
+                "OVIX värdet för rapporten är högt. Försök variera orden mindre."
+            )
+
+        if reading_attributes["ovix"] < self.reading_attributes_rules["ovix"]["min"]:
+            self.add_error(
+                "OVIX värdet för rapporten är lågt. Försk variera orden mera."
+            )
+
+        if reading_attributes["nk"] > self.reading_attributes_rules["nk"]["max"]:
+            self.add_error(
+                "Nominalkvoten för rapporten är högt. "
+                "Försök använda mindre substantiv och fler verb."
+            )
+
+        if reading_attributes["nk"] < self.reading_attributes_rules["nk"]["min"]:
+            self.add_error(
+                "Nominalkvoten för rapporten är låg. "
+                "Försök använda fler substantiv och mindre verb."
+            )
