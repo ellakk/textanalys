@@ -1,3 +1,6 @@
+from io import BytesIO
+
+from docx import Document
 from flask import Flask, request, jsonify, render_template
 from src.helpers import create_response
 from src.analyzer import Analyzer
@@ -49,19 +52,24 @@ def docx_post():
     if ".docx" not in file.filename:
         raise APIError("Dokumentet måste vara i docx format", 415)
 
-    report = None
+    document = None
     try:
-        report = Report(file)
+        source_stream = BytesIO(file.read())
+        document = Document(source_stream)
+        source_stream.close()
     except:
         raise APIError("Kunde inte läsa dokumentet.", 400)
 
+    report = Report(document)
     analyser = Analyzer(report)
     analyser.run()
 
-    return jsonify(create_response(
-        f"Hittade {len(analyser.errors)} fel i dokumentet.",
-        data=analyser.get_analysis()))
-
+    return jsonify(
+        create_response(
+            f"ok",
+            data=analyser.get_analysis(),
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -1,10 +1,8 @@
 import re
 from collections import OrderedDict
-from io import BytesIO
 import xml.etree.ElementTree as ET
 
 import requests
-from docx import Document
 
 
 class Report:
@@ -14,9 +12,7 @@ class Report:
         """Initialize the report. Argument to parameter report has to be a file handle
         of a .docx file.
         """
-        source_stream = BytesIO(report.read())
-        self.document = Document(source_stream)
-        source_stream.close()
+        self.document = report
 
         self.data = self._init_data()
         self.sparv_xml = self._init_sparv_xml()
