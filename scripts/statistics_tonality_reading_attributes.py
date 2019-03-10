@@ -49,8 +49,8 @@ def run():
     documents = read_documents()
     statistics, failed = gather_statistics(documents)
     with open("stats.json", "w") as file:
-        json.dump(statistics, file)
+        json.dump(statistics, file, ensure_ascii=False)
     with open("stats_errors.json", "w") as file:
-        json.dump(failed, file)
+        json.dump(failed, file, ensure_ascii=False)
 
 run()
