@@ -61,6 +61,9 @@ def docx_post():
         raise APIError("Kunde inte läsa dokumentet.", 400)
 
     report = Report(document)
+    if not report.to_text():
+        raise APIError("Tomt eller ej läsbart dokument.")
+
     analyser = Analyzer(report)
     analyser.run()
 
