@@ -265,7 +265,6 @@ class Analyzer:
         """Test if the reading attributes of the text passes the min,max rules of LIX,
         OVIX and NK."""
         reading_attributes = self.report.reading_attributes()
-        print(reading_attributes)
 
         if reading_attributes["lix"] > self.reading_attributes_rules["lix"]["max"]:
             self.add_error(
