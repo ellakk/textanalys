@@ -1,4 +1,5 @@
 import re
+from src.report.report import Report
 
 
 class Analyzer:
@@ -128,7 +129,7 @@ class Analyzer:
         },
     }
 
-    def __init__(self, report, stop_on_error=False):
+    def __init__(self, report: Report, stop_on_error=False):
         """Instantiate the object. The report argument is a dict where the keys are
         the header of the documents and the value is a list of paragraphs under the
         heading."""
@@ -170,8 +171,8 @@ class Analyzer:
         document.
         """
         for dependency in dependencies:
-            for headline in self.report.headlines():
-                if self.headline_rules[dependency]["regex"].match(headline):
+            for headline in self.report.headlines:
+                if self.headline_rules[dependency]["regex"].match(headline.name):
                     return True
         return False
 
@@ -183,7 +184,7 @@ class Analyzer:
             self.test_headlines_required,
             self.test_headlines_dependencies,
             self.test_headlines_order,
-            self.test_reading_attributes,
+            # self.test_reading_attributes,
         ]
 
         for test in tests:
@@ -194,10 +195,10 @@ class Analyzer:
     def test_headlines(self):
         """Test to make sure the headlines exists in the list of headlines predefined by
         the police."""
-        for headline in self.report.headlines():
+        for headline in self.report.headlines:
             is_match = False
             for rules in self.headline_rules.values():
-                if rules["regex"].match(headline):
+                if rules["regex"].match(headline.name):
                     is_match = True
                     break
             if not is_match:
@@ -208,10 +209,10 @@ class Analyzer:
 
     def test_headlines_case(self):
         """Test to make sure the headlines are written in uppercase."""
-        for headline in self.report.headlines():
-            if not headline.isupper():
+        for headline in self.report.headlines:
+            if not headline.name.isupper():
                 self.add_error(
-                    f"Rubriken {headline} är inte skriven i versaler", regex=headline
+                    f"Rubriken {headline} är inte skriven i versaler", regex=headline.name
                 )
 
     def test_headlines_required(self):
@@ -220,8 +221,8 @@ class Analyzer:
             if not rules["required"]:
                 continue
             is_match = False
-            for headline in self.report.headlines():
-                if rules["regex"].match(headline):
+            for headline in self.report.headlines:
+                if rules["regex"].match(headline.name):
                     is_match = True
                     break
             if not is_match:
@@ -229,8 +230,8 @@ class Analyzer:
 
     def test_headlines_dependencies(self):
         """Test if the headlines dependencies are satified."""
-        for headline in self.report.headlines():
-            rules = self.get_headline_rules(headline)
+        for headline in self.report.headlines:
+            rules = self.get_headline_rules(headline.name)
             if not rules:
                 continue
 
@@ -238,28 +239,28 @@ class Analyzer:
                 if not self.headline_has_dependencies(dependency):
                     dlist = ", ".join(dependency)
                     self.add_error(
-                        f"Rubriken {headline} kräver att en av följande "
+                        f"Rubriken {headline.name} kräver att en av följande "
                         f"rubriker finns med i dokumentet: {dlist}.",
-                        regex=headline,
+                        regex=headline.name,
                     )
 
     def test_headlines_order(self):
         """Test if the headlines are in correct order."""
         last = (0, "")
 
-        for headline in self.report.headlines():
-            rules = self.get_headline_rules(headline)
+        for headline in self.report.headlines:
+            rules = self.get_headline_rules(headline.name)
             if (not rules) or (rules["order"] == -1):
                 continue
 
             last_order, last_headline = last
             if last_order > rules["order"]:
                 self.add_error(
-                    f"Rubriken {headline} ska komma före rubriken {last_headline}.",
-                    regex=headline,
+                    f"Rubriken {headline.name} ska komma före rubriken {last_headline}.",
+                    regex=headline.name,
                 )
 
-            last = (rules["order"], headline)
+            last = (rules["order"], headline.name)
 
     def test_reading_attributes(self):
         """Test if the reading attributes of the text passes the min,max rules of LIX,

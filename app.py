@@ -4,7 +4,7 @@ from docx import Document
 from flask import Flask, request, jsonify, render_template
 from src.helpers import create_response
 from src.analyzer import Analyzer
-from src.report import Report
+from src.report.report import Report
 
 APP = Flask(__name__)
 APP.config["JSON_AS_ASCII"] = False
