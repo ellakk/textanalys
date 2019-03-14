@@ -146,12 +146,17 @@ class Analyzer:
         self.errors = []
         self.stop_on_error = stop_on_error
 
-    def add_error(self, message, regex=""):
+    def add_error(self, message, position=None, headline=None, word=None):
         """Add an error to the error list."""
         start, end = 0, 0
 
-        if regex:
-            start, end = self.report.get_regex_position(regex)
+        if position:
+            start, end = position
+        elif headline:
+            start, end = self.report.get_headline_position(headline)
+        elif word:
+            start, end = self.report.get_word_postion(word)
+
         self.errors.append({"message": message, "start": start, "end": end})
 
     def get_headline_rules(self, headline):
@@ -189,12 +194,10 @@ class Analyzer:
     def run(self):
         """Runs a full analysis on the document."""
         tests = [
-            self.test_headlines_case,
-            self.test_headlines,
-            self.test_headlines_required,
-            self.test_headlines_dependencies,
-            self.test_headlines_order,
-            self.test_reading_attributes,
+            self.test_headlines_case, self.test_headlines,
+            self.test_headlines_required, self.test_headlines_dependencies,
+            self.test_headlines_order, self.test_reading_attributes,
+            self.test_forbidden_words
         ]
 
         for test in tests:
@@ -213,16 +216,16 @@ class Analyzer:
                     break
             if not is_match:
                 self.add_error(
-                    f"{headline} är inte en valid rubrik enligt polisens direktiv.",
-                    regex=headline.name)
+                    f"{headline.name} är inte en valid rubrik.",
+                    headline=headline)
 
     def test_headlines_case(self):
         """Test to make sure the headlines are written in uppercase."""
         for headline in self.report.headlines:
             if not headline.name.isupper():
                 self.add_error(
-                    f"Rubriken {headline} är inte skriven i versaler",
-                    regex=headline.name)
+                    f"Rubriken {headline.name} är inte skriven i versaler",
+                    headline=headline)
 
     def test_headlines_required(self):
         """Make sure required headlines are present."""
@@ -250,7 +253,7 @@ class Analyzer:
                     self.add_error(
                         f"Rubriken {headline.name} kräver att en av följande "
                         f"rubriker finns med i dokumentet: {dlist}.",
-                        regex=headline.name,
+                        headline=headline,
                     )
 
     def test_headlines_order(self):
@@ -265,8 +268,9 @@ class Analyzer:
             last_order, last_headline = last
             if last_order > rules["order"]:
                 self.add_error(
-                    f"Rubriken {headline.name} ska komma före rubriken {last_headline}.",
-                    regex=headline.name,
+                    (f"Rubriken {headline.name} ska komma före "
+                     f"rubriken {last_headline}."),
+                    headline=headline,
                 )
 
             last = (rules["order"], headline.name)
