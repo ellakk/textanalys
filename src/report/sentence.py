@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-
 from src.report.word import Word
 
 
@@ -18,3 +17,6 @@ class Sentence:
                     self.words.append(Word(word_ne))
             else:
                 raise Exception(f'Unreqognized tag {word_node.tag}')
+
+    def has_word(self, word: Word) -> bool:
+        return word in self.words

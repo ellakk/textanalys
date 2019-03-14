@@ -2,12 +2,13 @@ import re
 import json
 import xml.etree.ElementTree as ET
 from functools import reduce
-from typing import List
+from typing import List, Tuple
 
 from docx import Document
 import requests
 
 from src.report.headline import Headline
+from src.report.word import Word
 
 
 class Report:
@@ -120,12 +121,30 @@ class Report:
         raise Exception(
             f"Sparv returned unexpected code: {response.status_code}")
 
-    def get_regex_position(self, regex):
+    def get_regex_position(self, regex) -> Tuple[int, int]:
         """Returns the start and end position of regex."""
         match = re.search(regex, self.to_text())
         if match:
             return match.span()
-        return (0, 0)
+        return 0, 0
+
+    def get_word_postion(self, word: Word) -> Tuple[int, int]:
+        """Get start and end position of the word in the report."""
+        text = self.to_text()
+        words = self.get_words()
+        current_position = 0
+
+        for w in words:
+            current_position = text.find(w.text, current_position)
+            if w == word:
+                return (current_position, current_position + len(w.text))
+        return 0, 0
+
+    def get_words(self) -> List[Word]:
+        return [
+            word for headline in self.headlines
+            for sentence in headline.sentences for word in sentence.words
+        ]
 
     def to_text(self) -> str:
         return "\n\n".join(
