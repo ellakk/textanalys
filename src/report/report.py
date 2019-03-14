@@ -25,6 +25,10 @@ class Report:
         for headline_node in text_node:
             self.headlines.append(Headline(headline_node))
 
+        self.lix = float(text_node.attrib['lix'])
+        self.ovix = float(text_node.attrib['ovix'])
+        self.nk = float(text_node.attrib['nk'])
+
     def _sparv_convert_document_to_xml(self) -> str:
         """Convert the document to an XML object and return it as a string. This
         document is only useful when sent to the Sparv API with our custom
@@ -118,9 +122,7 @@ class Report:
 
     def get_regex_position(self, regex):
         """Returns the start and end position of regex."""
-        report = self.to_text()
-
-        match = re.search(regex, report)
+        match = re.search(regex, self.to_text())
         if match:
             return match.span()
         return (0, 0)

@@ -6,9 +6,18 @@ class Analyzer:
     """Class for analysing documents."""
 
     reading_attributes_rules = {
-        "lix": {"min": 32.6, "max": 56.7},
-        "ovix": {"min": 47.8, "max": 82.7},
-        "nk": {"min": 0.65, "max": 3.73},
+        "lix": {
+            "min": 32.6,
+            "max": 56.7
+        },
+        "ovix": {
+            "min": 47.8,
+            "max": 82.7
+        },
+        "nk": {
+            "min": 0.65,
+            "max": 3.73
+        },
     }
 
     # All headline
@@ -172,7 +181,8 @@ class Analyzer:
         """
         for dependency in dependencies:
             for headline in self.report.headlines:
-                if self.headline_rules[dependency]["regex"].match(headline.name):
+                if self.headline_rules[dependency]["regex"].match(
+                        headline.name):
                     return True
         return False
 
@@ -184,7 +194,7 @@ class Analyzer:
             self.test_headlines_required,
             self.test_headlines_dependencies,
             self.test_headlines_order,
-            # self.test_reading_attributes,
+            self.test_reading_attributes,
         ]
 
         for test in tests:
@@ -193,8 +203,8 @@ class Analyzer:
             test()
 
     def test_headlines(self):
-        """Test to make sure the headlines exists in the list of headlines predefined by
-        the police."""
+        """Test to make sure the headlines exists in the list of headlines
+        predefined by the police."""
         for headline in self.report.headlines:
             is_match = False
             for rules in self.headline_rules.values():
@@ -204,16 +214,15 @@ class Analyzer:
             if not is_match:
                 self.add_error(
                     f"{headline} är inte en valid rubrik enligt polisens direktiv.",
-                    regex=headline,
-                )
+                    regex=headline.name)
 
     def test_headlines_case(self):
         """Test to make sure the headlines are written in uppercase."""
         for headline in self.report.headlines:
             if not headline.name.isupper():
                 self.add_error(
-                    f"Rubriken {headline} är inte skriven i versaler", regex=headline.name
-                )
+                    f"Rubriken {headline} är inte skriven i versaler",
+                    regex=headline.name)
 
     def test_headlines_required(self):
         """Make sure required headlines are present."""
@@ -263,38 +272,31 @@ class Analyzer:
             last = (rules["order"], headline.name)
 
     def test_reading_attributes(self):
-        """Test if the reading attributes of the text passes the min,max rules of LIX,
-        OVIX and NK."""
-        reading_attributes = self.report.reading_attributes()
-
-        if reading_attributes["lix"] > self.reading_attributes_rules["lix"]["max"]:
+        """Test if the reading attributes of the text passes the min,max rules
+        of LIX, OVIX and NK. """
+        if self.report.lix > self.reading_attributes_rules["lix"]["max"]:
             self.add_error(
                 "LIX värdet för rapporten är högt. Försök korta ner meningarna."
             )
 
-        if reading_attributes["lix"] < self.reading_attributes_rules["lix"]["min"]:
+        if self.report.lix < self.reading_attributes_rules["lix"]["min"]:
             self.add_error(
                 "LIX värdet för rapporten är lågt. Försök skriva längre meningar."
             )
 
-        if reading_attributes["ovix"] > self.reading_attributes_rules["ovix"]["max"]:
+        if self.report.ovix > self.reading_attributes_rules["ovix"]["max"]:
             self.add_error(
                 "OVIX värdet för rapporten är högt. Försök variera orden mindre."
             )
 
-        if reading_attributes["ovix"] < self.reading_attributes_rules["ovix"]["min"]:
+        if self.report.ovix < self.reading_attributes_rules["ovix"]["min"]:
             self.add_error(
-                "OVIX värdet för rapporten är lågt. Försk variera orden mera."
-            )
+                "OVIX värdet för rapporten är lågt. Försk variera orden mera.")
 
-        if reading_attributes["nk"] > self.reading_attributes_rules["nk"]["max"]:
-            self.add_error(
-                "Nominalkvoten för rapporten är högt. "
-                "Försök använda mindre substantiv och fler verb."
-            )
+        if self.report.nk > self.reading_attributes_rules["nk"]["max"]:
+            self.add_error("Nominalkvoten för rapporten är högt. "
+                           "Försök använda mindre substantiv och fler verb.")
 
-        if reading_attributes["nk"] < self.reading_attributes_rules["nk"]["min"]:
-            self.add_error(
-                "Nominalkvoten för rapporten är låg. "
-                "Försök använda fler substantiv och mindre verb."
-            )
+        if self.report.nk < self.reading_attributes_rules["nk"]["min"]:
+            self.add_error("Nominalkvoten för rapporten är låg. "
+                           "Försök använda fler substantiv och mindre verb.")
