@@ -128,6 +128,11 @@ class Report:
             return match.span()
         return 0, 0
 
+    def get_headline_position(self, headline: Headline) -> Tuple[int, int]:
+        """Returns the start and end postion of the headline, not its sub text.
+        """
+        return self.get_regex_position(headline.name)
+
     def get_word_postion(self, word: Word) -> Tuple[int, int]:
         """Get start and end position of the word in the report."""
         text = self.to_text()
