@@ -304,3 +304,20 @@ class Analyzer:
         if self.report.nk < self.reading_attributes_rules["nk"]["min"]:
             self.add_error("Nominalkvoten för rapporten är låg. "
                            "Försök använda fler substantiv och mindre verb.")
+
+    def test_forbidden_words(self):
+        # Move this to a separate file
+        forbidden_words = ['neger']
+
+        pads = ["'", '"', '”']
+        pad_open = False
+        for word in self.report.get_words():
+            if word.text in pads:
+                pad_open = not pad_open
+                continue
+            if pad_open:
+                continue
+            if word.text in forbidden_words:
+                self.add_error(
+                    f"Ordet {word.text} får endast förekomma i citat.",
+                    word=word)
