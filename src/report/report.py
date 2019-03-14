@@ -1,11 +1,11 @@
-import re
 import json
+import re
 import xml.etree.ElementTree as ET
 from functools import reduce
 from typing import List, Tuple
 
-from docx import Document
 import requests
+from docx import Document
 
 from src.report.headline import Headline
 from src.report.word import Word

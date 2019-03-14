@@ -1,9 +1,10 @@
 from io import BytesIO
 
 from docx import Document
-from flask import Flask, request, jsonify, render_template
-from src.helpers import create_response
+from flask import Flask, jsonify, render_template, request
+
 from src.analyzer import Analyzer
+from src.helpers import create_response
 from src.report.report import Report
 
 APP = Flask(__name__)
@@ -67,12 +68,10 @@ def docx_post():
     analyser = Analyzer(report)
     analyser.run()
 
-    return jsonify(
-        create_response(
-            f"ok",
-            data=analyser.get_analysis(),
-        )
-    )
+    return jsonify(create_response(
+        f"ok",
+        data=analyser.get_analysis(),
+    ))
 
 
 if __name__ == "__main__":
