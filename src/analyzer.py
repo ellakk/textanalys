@@ -1,28 +1,21 @@
 import re
+from typing import List, Optional, Union, Tuple, Dict, Any, Match, Pattern, Callable
 
 from src.report.report import Report
+from src.report.word import Word
+from src.report.headline import Headline
 
 
 class Analyzer:
     """Class for analysing documents."""
 
-    reading_attributes_rules = {
-        "lix": {
-            "min": 32.6,
-            "max": 56.7
-        },
-        "ovix": {
-            "min": 47.8,
-            "max": 82.7
-        },
-        "nk": {
-            "min": 0.65,
-            "max": 3.73
-        },
+    reading_attributes_rules: Dict[str, Dict[str, float]] = {
+        "lix": {"min": 32.6, "max": 56.7},
+        "ovix": {"min": 47.8, "max": 82.7},
+        "nk": {"min": 0.65, "max": 3.73},
     }
 
-    # All headline
-    headline_rules = {
+    headline_rules: Dict[str, Dict[str, Any]] = {
         "INLEDNING": {
             "regex": re.compile(r"inledning", re.I),
             "order": 1,
@@ -139,17 +132,24 @@ class Analyzer:
         },
     }
 
-    def __init__(self, report: Report, stop_on_error=False):
+    def __init__(self, report: Report, stop_on_error: bool = False) -> None:
         """Instantiate the object. The report argument is a dict where the keys are
         the header of the documents and the value is a list of paragraphs under the
         heading."""
-        self.report = report
-        self.errors = []
-        self.stop_on_error = stop_on_error
+        self.report: Report = report
+        self.errors: List[Dict[str, Union[str, int]]] = []
+        self.stop_on_error: bool = stop_on_error
 
-    def add_error(self, message, position=None, headline=None, word=None):
+    def add_error(
+        self,
+        message: str,
+        position: Optional[Tuple[int, int]] = None,
+        headline: Optional[Headline] = None,
+        word: Optional[Word] = None,
+    ) -> None:
         """Add an error to the error list."""
-        start, end = 0, 0
+        start: int = 0
+        end: int = 0
 
         if position:
             start, end = position
@@ -157,48 +157,50 @@ class Analyzer:
             start, end = self.report.get_headline_position(headline)
         elif word:
             start, end = self.report.get_word_postion(word)
-
         self.errors.append({"message": message, "start": start, "end": end})
 
-    def get_headline_rules(self, headline):
+    def get_headline_rules(self, headline: Headline) -> Optional[Dict[str, Any]]:
         """Return the rules for headline if found."""
         for rules in self.headline_rules.values():
-            if rules["regex"].match(headline):
+            if rules["regex"].match(headline.name):
                 return rules
-        return {}
+        return None
 
-    def get_analysis(self):
-        """The result of the analysis as a dict. Formatted to be used as an API reponse."""
+    def get_analysis(self) -> Dict[str, Any]:
+        """The result of the analysis as a dict. Formatted to be used as an API reponse.
+        """
         return {
             "report": self.report.to_text(),
             "errors": self.errors,
             "has_errors": self.has_errors(),
         }
 
-    def has_errors(self):
+    def has_errors(self) -> bool:
         """Returns a boolean representing if the analyzer has found errors or not."""
         if self.errors:
             return True
         return False
 
-    def headline_has_dependencies(self, dependencies):
+    def headline_has_dependencies(self, dependencies: List[str]) -> bool:
         """Validates a list of dependencies, returns true if atleast one exist in the
         document.
         """
         for dependency in dependencies:
             for headline in self.report.headlines:
-                if self.headline_rules[dependency]["regex"].match(
-                        headline.name):
+                if self.headline_rules[dependency]["regex"].match(headline.name):
                     return True
         return False
 
-    def run(self):
+    def run(self) -> None:
         """Runs a full analysis on the document."""
-        tests = [
-            self.test_headlines_case, self.test_headlines,
-            self.test_headlines_required, self.test_headlines_dependencies,
-            self.test_headlines_order, self.test_reading_attributes,
-            self.test_forbidden_words
+        tests: List[Callable[[], None]] = [
+            self.test_headlines_case,
+            self.test_headlines,
+            self.test_headlines_required,
+            self.test_headlines_dependencies,
+            self.test_headlines_order,
+            self.test_reading_attributes,
+            self.test_forbidden_words,
         ]
 
         for test in tests:
@@ -206,34 +208,35 @@ class Analyzer:
                 break
             test()
 
-    def test_headlines(self):
+    def test_headlines(self) -> None:
         """Test to make sure the headlines exists in the list of headlines
         predefined by the police."""
         for headline in self.report.headlines:
-            is_match = False
+            is_match: bool = False
             for rules in self.headline_rules.values():
                 if rules["regex"].match(headline.name):
                     is_match = True
                     break
             if not is_match:
                 self.add_error(
-                    f"{headline.name} är inte en valid rubrik.",
-                    headline=headline)
+                    f"{headline.name} är inte en valid rubrik.", headline=headline
+                )
 
-    def test_headlines_case(self):
+    def test_headlines_case(self) -> None:
         """Test to make sure the headlines are written in uppercase."""
         for headline in self.report.headlines:
             if not headline.name.isupper():
                 self.add_error(
                     f"Rubriken {headline.name} är inte skriven i versaler",
-                    headline=headline)
+                    headline=headline,
+                )
 
-    def test_headlines_required(self):
+    def test_headlines_required(self) -> None:
         """Make sure required headlines are present."""
         for rule, rules in self.headline_rules.items():
             if not rules["required"]:
                 continue
-            is_match = False
+            is_match: bool = False
             for headline in self.report.headlines:
                 if rules["regex"].match(headline.name):
                     is_match = True
@@ -241,42 +244,44 @@ class Analyzer:
             if not is_match:
                 self.add_error(f"Rubriken {rule} som måste vara med saknas.")
 
-    def test_headlines_dependencies(self):
+    def test_headlines_dependencies(self) -> None:
         """Test if the headlines dependencies are satified."""
         for headline in self.report.headlines:
-            rules = self.get_headline_rules(headline.name)
+            rules: Optional[Dict[str, Any]] = self.get_headline_rules(headline)
             if not rules:
                 continue
 
             for dependency in rules["dependencies"]:
                 if not self.headline_has_dependencies(dependency):
-                    dlist = ", ".join(dependency)
+                    dependencies_list: str = ", ".join(dependency)
                     self.add_error(
                         f"Rubriken {headline.name} kräver att en av följande "
-                        f"rubriker finns med i dokumentet: {dlist}.",
+                        f"rubriker finns med i dokumentet: {dependencies_list}.",
                         headline=headline,
                     )
 
-    def test_headlines_order(self):
+    def test_headlines_order(self) -> None:
         """Test if the headlines are in correct order."""
-        last = (0, "")
+        last: Tuple[int, str] = (0, "")
 
         for headline in self.report.headlines:
-            rules = self.get_headline_rules(headline.name)
+            rules: Optional[Dict[str, Any]] = self.get_headline_rules(headline)
             if (not rules) or (rules["order"] == -1):
                 continue
 
-            last_order, last_headline = last
+            last_order, last_headline = last  # type: int, str
             if last_order > rules["order"]:
                 self.add_error(
-                    (f"Rubriken {headline.name} ska komma före "
-                     f"rubriken {last_headline}."),
+                    (
+                        f"Rubriken {headline.name} ska komma före "
+                        f"rubriken {last_headline}."
+                    ),
                     headline=headline,
                 )
 
             last = (rules["order"], headline.name)
 
-    def test_reading_attributes(self):
+    def test_reading_attributes(self) -> None:
         """Test if the reading attributes of the text passes the min,max rules
         of LIX, OVIX and NK. """
         if self.report.lix > self.reading_attributes_rules["lix"]["max"]:
@@ -296,21 +301,26 @@ class Analyzer:
 
         if self.report.ovix < self.reading_attributes_rules["ovix"]["min"]:
             self.add_error(
-                "OVIX värdet för rapporten är lågt. Försk variera orden mera.")
+                "OVIX värdet för rapporten är lågt. Försk variera orden mera."
+            )
 
         if self.report.nk > self.reading_attributes_rules["nk"]["max"]:
-            self.add_error("Nominalkvoten för rapporten är högt. "
-                           "Försök använda mindre substantiv och fler verb.")
+            self.add_error(
+                "Nominalkvoten för rapporten är högt. "
+                "Försök använda mindre substantiv och fler verb."
+            )
 
         if self.report.nk < self.reading_attributes_rules["nk"]["min"]:
-            self.add_error("Nominalkvoten för rapporten är låg. "
-                           "Försök använda fler substantiv och mindre verb.")
+            self.add_error(
+                "Nominalkvoten för rapporten är låg. "
+                "Försök använda fler substantiv och mindre verb."
+            )
 
     def test_forbidden_words(self):
         # Move this to a separate file
-        forbidden_words = ['neger']
+        forbidden_words = ["neger"]
 
-        pads = ["'", '"', '”']
+        pads = ["'", '"', "”"]
         pad_open = False
         for word in self.report.get_words():
             if word.text in pads:
@@ -320,5 +330,5 @@ class Analyzer:
                 continue
             if word.text in forbidden_words:
                 self.add_error(
-                    f"Ordet {word.text} får endast förekomma i citat.",
-                    word=word)
+                    f"Ordet {word.text} får endast förekomma i citat.", word=word
+                )
