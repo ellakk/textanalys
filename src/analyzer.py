@@ -152,12 +152,12 @@ class Analyzer:
     def test_reading_attributes(self) -> None:
         """Test if the reading attributes of the text passes the min,max rules
         of LIX."""
-        if self.report.lix > Rules.lix.max:
+        if self.report.lix > Rules.lix_max:
             self.add_error(
                 "LIX värdet för rapporten är högt. Försök korta ner meningarna."
             )
 
-        if self.report.lix < Rules.lix.min:
+        if self.report.lix < Rules.lix_min:
             self.add_error(
                 "LIX värdet för rapporten är lågt. Försök skriva längre meningar."
             )

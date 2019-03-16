@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from src.rules.rule_structures import HeadlineRules, LIXRules
+from src.rules.rule_structures import HeadlineRules
 
 
 class Rules:
@@ -28,11 +28,14 @@ class Rules:
         HeadlineRules("TILLGRIPET GODS"),
         HeadlineRules("PARTERNAS INBÖRDES FÖRHÅLLANDE"),
     ]
-    lix: LIXRules = LIXRules(min=32.6, max=56.7)
+    lix_max: float = 56.7
+    lix_min: float = 32.6
+    spelling_skip_wordclasses: List[str] = ["PM", "PAD", "AN"]
 
     @classmethod
-    def get_headline_rules(cls, text: str) -> Optional[HeadlineRules]:
+    def get_headline_rules(cls, candidate: str) -> Optional[HeadlineRules]:
+        """Try to get the headline rules matching the candidate."""
         for headline in cls.headlines:
-            if headline.matches(text):
+            if headline.matches(candidate):
                 return headline
         return None

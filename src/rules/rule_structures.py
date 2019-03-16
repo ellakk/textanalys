@@ -23,10 +23,3 @@ class HeadlineRules:
         if self.regex and re.match(self.regex, candidate, re.I):
             return True
         return False
-
-
-
-@dataclass
-class LIXRules:
-    min: float
-    max: float
