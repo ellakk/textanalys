@@ -63,6 +63,7 @@ class Analyzer:
             self.test_headlines_order,
             self.test_reading_attributes,
             self.test_forbidden_words,
+            self.test_spelling,
         ]
 
         for test in tests:
@@ -179,3 +180,11 @@ class Analyzer:
                 self.add_error(
                     f"Ordet {word.text} får endast förekomma i citat.", word=word
                 )
+
+    def test_spelling(self) -> None:
+        misstakes = self.report.spellcheck(Rules.spelling_skip_wordclasses)
+        for word, corrections in misstakes.items():
+            error_text = f"Ordet {word.text} är felstavat."
+            if corrections:
+                error_text += " Rättningsförslag: " + ", ".join(corrections)
+            self.add_error(error_text, word=word)

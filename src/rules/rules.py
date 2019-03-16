@@ -30,7 +30,10 @@ class Rules:
     ]
     lix_max: float = 56.7
     lix_min: float = 32.6
-    spelling_skip_wordclasses: List[str] = ["PM", "PAD", "AN"]
+    spelling_skip_wordclasses: List[str] = [
+        "PM",  # names
+        "AN"   # abbreviation
+    ]
 
     @classmethod
     def get_headline_rules(cls, candidate: str) -> Optional[HeadlineRules]:

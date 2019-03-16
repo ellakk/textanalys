@@ -1,8 +1,11 @@
+import tempfile
+import os
+import subprocess
 import json
 import re
 import xml.etree.ElementTree as ET
 from functools import reduce
-from typing import List, Match, Optional, Tuple
+from typing import List, Match, Optional, Tuple, Dict, IO, Any
 
 import requests
 from docx import Document
@@ -139,13 +142,48 @@ class Report:
                 return (current_position, current_position + len(w.text))
         return 0, 0
 
-    def get_words(self) -> List[Word]:
+    def get_words(self, skip_wordclasses: List[str] = []) -> List[Word]:
         return [
             word
             for headline in self.headlines
             for sentence in headline.sentences
             for word in sentence.words
+            if word.wordclass not in skip_wordclasses
         ]
+
+    def spellcheck(self, skip_wordclasses: List[str]) -> Dict[Word, List[str]]:
+        """Run the stava spellchecker and return a list of incorrectly spelled word objects and
+        suggestions for alternative spellings."""
+        # open temp file to store text
+        file: IO[Any] = tempfile.NamedTemporaryFile(delete=False)
+        file.write(self.to_text().encode("utf-8"))
+        tmp_path: str = file.name
+        file.close()
+
+        # run stava on temp file and parse the output
+        args = [
+            "stava",
+            "-r",  # include corrections
+            "-f",  # include abbreviations
+            "-n",  # include common names
+            tmp_path,
+        ]
+        output = subprocess.run(args, stdout=subprocess.PIPE)
+        stava_results: Dict[Word, List[str]] = {}
+        for line in output.stdout.decode("utf-8").split("\n"):
+            match: Optional[Match] = re.match(r"^(.+): (.+)$", line)
+            if match and "?" in match.group(2):
+                stava_results[match.group(1)] = []
+            elif match:
+                stava_results[match.group(1)] = match.group(2).split(" ")
+
+        # link word objects to errors and suggestions
+        results: Dict[Word, List[str]] = {}
+        for error, corrections in stava_results.items():
+            for word in self.get_words(skip_wordclasses):
+                if word.text == error:
+                    results[word] = corrections
+        return results
 
     def to_text(self) -> str:
         return "\n\n".join([headline.to_text() for headline in self.headlines]).strip()
