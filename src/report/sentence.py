@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from typing import List
+from typing import List, Optional
 
 from src.report.word import Word
 from src.report.named_entity import NamedEntity
@@ -24,3 +24,19 @@ class Sentence:
 
     def has_word(self, word: Word) -> bool:
         return word in self.words
+
+    def get_named_entities(
+        self, identity: str, type: Optional[str] = None, subtype: Optional[str] = None
+    ) -> List[NamedEntity]:
+        """Returns a list of named entities from the text in the sentence that matches the
+        specifications. """
+        found: List[NamedEntity] = []
+        for named_entity in self.named_entities:
+            if not identity == named_entity.identity:
+                continue
+            if type and (type != named_entity.type):
+                continue
+            if subtype and (subtype != named_entity.subtype):
+                continue
+            found.append(named_entity)
+        return found

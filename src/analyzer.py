@@ -61,6 +61,7 @@ class Analyzer:
             self.test_headlines_required,
             self.test_headlines_dependencies,
             self.test_headlines_order,
+            self.test_headlines_named_entities,
             self.test_reading_attributes,
             self.test_forbidden_words,
             self.test_spelling,
@@ -150,6 +151,22 @@ class Analyzer:
 
             last = (rule.order, headline.name)
 
+    def test_headlines_named_entities(self) -> None:
+        """Test if the headlines required named entities are present."""
+        for headline in self.report.headlines:
+            rule: Optional[HeadlineRules] = Rules.get_headline_rules(headline.name)
+            if not (rule and rule.named_entities):
+                continue
+
+            for ne_rule in rule.named_entities:
+                if headline.has_named_entity(
+                    ne_rule.identity, ne_rule.type, ne_rule.subtype
+                ):
+                    continue
+                if ne_rule.cheat and re.search(ne_rule.cheat, headline.to_text()):
+                    continue
+                self.add_error(ne_rule.message, headline=headline)
+
     def test_reading_attributes(self) -> None:
         """Test if the reading attributes of the text passes the min,max rules
         of LIX."""
@@ -182,9 +199,10 @@ class Analyzer:
                 )
 
     def test_spelling(self) -> None:
+        """Test the spelling in the report."""
         misstakes = self.report.spellcheck(Rules.spelling_skip_wordclasses)
         for word, corrections in misstakes.items():
-            error_text = f"Ordet {word.text} är felstavat."
+            error_text: str = f"Ordet {word.text} är felstavat."
             if corrections:
                 error_text += " Rättningsförslag: " + ", ".join(corrections)
             self.add_error(error_text, word=word)

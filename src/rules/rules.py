@@ -1,13 +1,16 @@
 from typing import List, Optional
 
-from src.rules.rule_structures import HeadlineRules
+from src.rules.rule_structures import HeadlineRules, NamedEntityRule
 
 
 class Rules:
     """All the rules for the report. The class is static since nothing is supposed to change
     and should never be instansiated."""
     headlines: List[HeadlineRules] = [
-        HeadlineRules("INLEDNING", order=1, required=True),
+        HeadlineRules("INLEDNING",
+                      order=1,
+                      required=True,
+                      named_entities=[NamedEntityRule("Texten under rubriken INLEDNING behöver en tidpunkt", "TIMEX", cheat=r"\d{1,2}[:|\.]\d{1,2}")]),
         HeadlineRules("ÅTALSANGIVELSE", order=2),
         HeadlineRules("BROTTET", order=2),
         HeadlineRules("BROTTEN", order=2),
