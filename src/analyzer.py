@@ -186,9 +186,7 @@ class Analyzer:
     def test_forbidden_words(self) -> None:
         """Test if a list of forbidden words exists in text."""
         # Move this to a separate file
-        forbidden_words = ["neger"]
-
-        pads = ["'", '"', "”"]
+        pads = ["'", '"', "”", "“"]
         pad_open = False
         for word in self.report.get_words():
             if word.text in pads:
@@ -196,7 +194,7 @@ class Analyzer:
                 continue
             if pad_open:
                 continue
-            if word.text in forbidden_words:
+            if word.text in self.rules.forbidden_words:
                 self.add_error(
                     f"Ordet {word.text} får endast förekomma i citat.", word=word
                 )
@@ -205,6 +203,8 @@ class Analyzer:
         """Test the spelling in the report."""
         misstakes = self.report.spellcheck(self.rules.spelling_skip_wordclasses)
         for word, corrections in misstakes.items():
+            if word.text in self.rules.forbidden_words:
+                continue
             error_text: str = f"Ordet {word.text} är felstavat."
             if corrections:
                 error_text += " Rättningsförslag: " + ", ".join(corrections)

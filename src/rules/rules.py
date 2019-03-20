@@ -11,11 +11,16 @@ class Rules:
     lix_max: float
     lix_min: float
     spelling_skip_wordclasses: List[str] = []
+    forbidden_words: List[str] = []
 
     def __init__(self):
         self._init_headline_rules()
         self._init_lix()
         self._init_spell_skip()
+        self._init_forbidden_words()
+
+    def _init_forbidden_words(self):
+        self.forbidden_words = ["neger", "bitch", "fitta", "hora"]
 
     def _init_headline_rules(self):
         self.headlines.append(
@@ -30,7 +35,7 @@ class Rules:
                         cheat=r"\d{1,2}[:|\.]\d{1,2}",
                     ),
                     NamedEntityRule(
-                        "Texten under rubriken INLEDNING behöver en adress.",
+                        "Texten under rubriken INLEDNING behöver en geografisk adress/plats.",
                         identity="ENAMEX",
                         type="LOC",
                     ),
