@@ -1,5 +1,5 @@
 import re
-from typing import List, Optional, Union, Tuple, Dict, Any, Match, Pattern, Callable
+from typing import List, Optional, Union, Tuple, Dict, Any, Callable
 
 from src.report.report import Report
 from src.report.word import Word
@@ -15,6 +15,7 @@ class Analyzer:
         """Instantiate the object. The report argument is a dict where the keys are
         the header of the documents and the value is a list of paragraphs under the
         heading."""
+        self.rules = Rules()
         self.report: Report = report
         self.errors: List[Dict[str, Union[str, int]]] = []
         self.stop_on_error: bool = stop_on_error
@@ -84,19 +85,19 @@ class Analyzer:
     def test_headlines_predefined(self) -> None:
         """Test to make sure the headlines exists in the list of predefined ones."""
         for headline in self.report.headlines:
-            if not Rules.get_headline_rules(headline.name):
+            if not self.rules.get_headline_rules(headline.name):
                 self.add_error(
                     f"{headline.name} är inte en valid rubrik.", headline=headline
                 )
 
     def test_headlines_required(self) -> None:
         """Make sure required headlines are present."""
-        for rule in Rules.headlines:
+        for rule in self.rules.headlines:
             if not rule.required:
                 continue
             is_match: bool = False
             for headline in self.report.headlines:
-                if Rules.get_headline_rules(headline.name) == rule:
+                if self.rules.get_headline_rules(headline.name) == rule:
                     is_match = True
                     break
             if not is_match:
@@ -107,12 +108,14 @@ class Analyzer:
 
         def has_dep(dep: str) -> bool:
             for h in self.report.headlines:
-                if Rules.get_headline_rules(h.name) == Rules.get_headline_rules(dep):
+                if self.rules.get_headline_rules(
+                    h.name
+                ) == self.rules.get_headline_rules(dep):
                     return True
             return False
 
         for headline in self.report.headlines:
-            rule: Optional[HeadlineRules] = Rules.get_headline_rules(headline.name)
+            rule: Optional[HeadlineRules] = self.rules.get_headline_rules(headline.name)
             if not rule:
                 continue
 
@@ -135,7 +138,7 @@ class Analyzer:
         last: Tuple[int, str] = (0, "")
 
         for headline in self.report.headlines:
-            rule: Optional[HeadlineRules] = Rules.get_headline_rules(headline.name)
+            rule: Optional[HeadlineRules] = self.rules.get_headline_rules(headline.name)
             if (not rule) or (rule.order is None):
                 continue
 
@@ -154,7 +157,7 @@ class Analyzer:
     def test_headlines_named_entities(self) -> None:
         """Test if the headlines required named entities are present."""
         for headline in self.report.headlines:
-            rule: Optional[HeadlineRules] = Rules.get_headline_rules(headline.name)
+            rule: Optional[HeadlineRules] = self.rules.get_headline_rules(headline.name)
             if not (rule and rule.named_entities):
                 continue
 
@@ -170,12 +173,12 @@ class Analyzer:
     def test_reading_attributes(self) -> None:
         """Test if the reading attributes of the text passes the min,max rules
         of LIX."""
-        if self.report.lix > Rules.lix_max:
+        if self.report.lix > self.rules.lix_max:
             self.add_error(
                 "LIX värdet för rapporten är högt. Försök korta ner meningarna."
             )
 
-        if self.report.lix < Rules.lix_min:
+        if self.report.lix < self.rules.lix_min:
             self.add_error(
                 "LIX värdet för rapporten är lågt. Försök skriva längre meningar."
             )
@@ -200,7 +203,7 @@ class Analyzer:
 
     def test_spelling(self) -> None:
         """Test the spelling in the report."""
-        misstakes = self.report.spellcheck(Rules.spelling_skip_wordclasses)
+        misstakes = self.report.spellcheck(self.rules.spelling_skip_wordclasses)
         for word, corrections in misstakes.items():
             error_text: str = f"Ordet {word.text} är felstavat."
             if corrections:
