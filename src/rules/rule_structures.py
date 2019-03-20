@@ -28,7 +28,7 @@ class HeadlineRules:
         return False
 
     def matches(self, candidate: str) -> bool:
-        if re.match(self.name, candidate, re.I):
+        if re.match("^" + self.name + "$", candidate, re.I):
             return True
         if self.regex and re.match(self.regex, candidate, re.I):
             return True
