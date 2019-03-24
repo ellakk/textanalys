@@ -186,8 +186,8 @@ class Analyzer:
     def test_forbidden_words(self) -> None:
         """Test if a list of forbidden words exists in text."""
         # Move this to a separate file
-        pads = ["'", '"', "”", "“"]
-        pad_open = False
+        pads: List[str] = ["'", '"', "”", "“"]
+        pad_open: bool = False
         for word in self.report.get_words():
             if word.text in pads:
                 pad_open = not pad_open
@@ -201,7 +201,9 @@ class Analyzer:
 
     def test_spelling(self) -> None:
         """Test the spelling in the report."""
-        misstakes = self.report.spellcheck(self.rules.spelling_skip_wordclasses)
+        misstakes: Dict[Word, List[str]] = self.report.spellcheck(
+            self.rules.spelling_skip_wordclasses
+        )
         for word, corrections in misstakes.items():
             if word.text in self.rules.forbidden_words:
                 continue
