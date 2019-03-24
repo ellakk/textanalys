@@ -56,8 +56,11 @@ class Analyzer:
 
     def run(self) -> None:
         """Runs a full analysis on the document."""
+        self.test_sanity()
+        if self.has_errors():
+            return
+
         tests: List[Callable[[], None]] = [
-            self.test_headlines_case,
             self.test_headlines_predefined,
             self.test_headlines_required,
             self.test_headlines_dependencies,
@@ -73,14 +76,20 @@ class Analyzer:
                 break
             test()
 
-    def test_headlines_case(self) -> None:
-        """Test to make sure the headlines are written in uppercase."""
-        for headline in self.report.headlines:
-            if not headline.name.isupper():
-                self.add_error(
-                    f"Rubriken {headline.name} är inte skriven i versaler",
-                    headline=headline,
-                )
+    def test_sanity(self) -> None:
+        """Test to se if the document has the proper format and can be used in the other
+        tests."""
+        if self.report.headlines:
+            return
+
+        if self.report.document.paragraphs:
+            self.add_error(
+                "Rubrikerna i dokumentet är felformaterade eller saknas. "
+                "Rubrikerna ska vara skrivna i versaler."
+            )
+
+        if not self.report.document.paragraphs:
+            self.add_error("Ditt dokument är antigen tomt eller i fel format")
 
     def test_headlines_predefined(self) -> None:
         """Test to make sure the headlines exists in the list of predefined ones."""

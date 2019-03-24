@@ -27,7 +27,8 @@ class Report:
         root_node: ET.Element = self._sparv_get_analysis()
         text_node: Optional[ET.Element] = root_node.find("corpus/text")
         if not text_node:
-            raise Exception("Could not find corpus/text node")
+            return
+            # raise Exception("Could not find corpus/text node")
 
         for headline_node in text_node:
             self.headlines.append(Headline(headline_node))
@@ -54,9 +55,9 @@ class Report:
         root_node = ET.Element("text", attrib={"title": "Anmälan"})
         current_headline: Optional[ET.Element] = None
         for paragraph in self.document.paragraphs:
-            text = paragraph.text.strip()
+            text: str = paragraph.text.strip()
             # Is it a headline or just text
-            if re.match(r"(^\w+\s?\w+\s?\w+\s?\:?$)", text):
+            if re.match(r"(^\w+\s?\w+\s?\w+\s?\:?$)", text) and text.isupper():
                 current_headline = ET.SubElement(
                     root_node, "paragraph", attrib={"name": text}
                 )
