@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+import yaml
+
 from src.rules.rule_structures import HeadlineRules, NamedEntityRule
 
 
@@ -20,7 +22,8 @@ class Rules:
         self._init_forbidden_words()
 
     def _init_forbidden_words(self):
-        self.forbidden_words = ["neger", "bitch", "fitta", "hora"]
+        with open("settings/rules/forbidden_words.yaml", "r") as file:
+            self.forbidden_words = yaml.load(file, Loader=yaml.FullLoader)
 
     def _init_headline_rules(self):
         self.headlines.append(
