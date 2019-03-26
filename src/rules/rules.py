@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 import yaml
 
@@ -17,12 +17,14 @@ class Rules:
         self.lix_min: float
         self.spelling_skip_wordclasses: List[str] = []
         self.citation_delimiters: List[str] = []
+        self.grammar_rules: List[Dict[str, str]]
         with open("settings/rules/rules.yaml", "r") as file:
             rules = yaml.load(file, Loader=yaml.FullLoader)
             self.lix_min = rules["lix"]["min"]
             self.lix_max = rules["lix"]["max"]
             self.spelling_skip_wordclasses = rules["spelling_skip_wordclasses"]
             self.citation_delimiters = rules["citation_delimiters"]
+            self.grammar_regex = rules["grammar_regex"]
 
         self.forbidden_words: List[str] = []
         with open("settings/rules/forbidden_words.yaml", "r") as file:

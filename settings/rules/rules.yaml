@@ -14,3 +14,6 @@ citation_delimiters:
   - "\""
   - "”"
   - "“"
+
+grammar_regex:
+  - { regex: " {2,}", message: Mer än ett mellanslag. }

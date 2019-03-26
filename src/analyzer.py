@@ -69,6 +69,7 @@ class Analyzer:
             self.test_reading_attributes,
             self.test_forbidden_words,
             self.test_spelling,
+            self.test_grammar_rules_regex,
         ]
 
         for test in tests:
@@ -202,7 +203,9 @@ class Analyzer:
                 continue
             if pad_open:
                 continue
-            if word.text in self.rules.forbidden_words:
+            if (word.text in self.rules.forbidden_words) or any(
+                [b in self.rules.forbidden_words for b in word.baseform]
+            ):
                 self.add_error(
                     f"Ordet {word.text} får endast förekomma i citat.", word=word
                 )
@@ -219,3 +222,10 @@ class Analyzer:
             if corrections:
                 error_text += " Rättningsförslag: " + ", ".join(corrections)
             self.add_error(error_text, word=word)
+
+    def test_grammar_rules_regex(self) -> None:
+        """Test grammatical rules by matching against regex'es."""
+        for rule in self.rules.grammar_regex:
+            positions: List[Tuple[int, int]] = self.report.get_regex_postions(rule["regex"])
+            for position in positions:
+                self.add_error(rule["message"], position=position)

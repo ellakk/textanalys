@@ -1,11 +1,10 @@
 import tempfile
-import os
 import subprocess
 import json
 import re
 import xml.etree.ElementTree as ET
 from functools import reduce
-from typing import List, Match, Optional, Tuple, Dict, IO, Any
+from typing import List, Match, Optional, Tuple, Dict, IO, Any, Iterator
 
 import requests
 from docx import Document
@@ -120,11 +119,16 @@ class Report:
         raise Exception(f"Sparv returned unexpected code: {response.status_code}")
 
     def get_regex_position(self, regex) -> Tuple[int, int]:
-        """Returns the start and end position of regex."""
+        """Returns the start and end position of the first match of regex."""
         match: Optional[Match[str]] = re.search(regex, self.to_text())
         if match:
             return match.span()
         return 0, 0
+
+    def get_regex_postions(self, regex) -> List[Tuple[int, int]]:
+        """Returns the start and end postions of all found regex matches."""
+        matches: Iterator[Match[str]] = re.finditer(regex, self.to_text())
+        return [match.span() for match in matches]
 
     def get_headline_position(self, headline: Headline) -> Tuple[int, int]:
         """Returns the start and end postion of the headline, not its sub text."""
