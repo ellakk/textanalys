@@ -37,6 +37,7 @@ class Analyzer:
             start, end = self.report.get_headline_position(headline)
         elif word:
             start, end = self.report.get_word_postion(word)
+
         self.errors.append({"message": message, "start": start, "end": end})
 
     def get_analysis(self) -> Dict[str, Any]:
@@ -68,6 +69,7 @@ class Analyzer:
             self.test_headlines_named_entities,
             self.test_reading_attributes,
             self.test_forbidden_words,
+            self.test_unwanted_words,
             self.test_spelling,
             self.test_grammar_rules_regex,
         ]
@@ -194,8 +196,7 @@ class Analyzer:
             )
 
     def test_forbidden_words(self) -> None:
-        """Test if a list of forbidden words exists in text."""
-        # Move this to a separate file
+        """Test if there are any sensitive/swear words outside of the citations."""
         pad_open: bool = False
         for word in self.report.get_words():
             if word.text in self.rules.citation_delimiters:
@@ -209,6 +210,25 @@ class Analyzer:
                 self.add_error(
                     f"Ordet {word.text} får endast förekomma i citat.", word=word
                 )
+
+    def test_unwanted_words(self) -> None:
+        """Test if there are any unwanted words outside of the citations and report them with a
+        suggestion what to use instead."""
+        pad_open: bool = False
+        for word in self.report.get_words():
+            if word.text in self.rules.citation_delimiters:
+                pad_open = not pad_open
+                continue
+            if pad_open:
+                continue
+            for u_word in self.rules.unwanted_words:
+                if word.text == u_word["word"]:
+                    self.add_error(
+                        f"Ordet {word.text} är inte tillåtet, "
+                        f"använd hellre: {u_word['alternative']}.",
+                        word=word,
+                    )
+                    break
 
     def test_spelling(self) -> None:
         """Test the spelling in the report."""
