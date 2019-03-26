@@ -1,0 +1,77 @@
+# This file declares headlines and their rules. Example with all options:
+
+# INLEDNING:                      # Name of the headline. Will be used to match headline before regex is tried.
+#    order: 1                     # Expected order compared to the other ordered headlines
+#    regex: .+                    # Regular expression that matches headline. Will be used after the named is tried.
+#    required: true               # If the headline is required.
+#    dependencies: [[d1, d1.2], [d2]]  # List of other headlines that has to be present for this headline.
+#    named_entities:              # Named entities that has to be present for this headline.
+#      - message: Tid behövs      # Error message when entity is not present.
+#        identity: TIMEX          # Identity of the named entity.
+#        type: LOC                # Type of the named entity.
+#        subtype: GEO             # Subtype of the named entity.
+#        cheat: \d{1,2}           # Regex cheat to match the text under the headline with. If it is matched then the named entity is present.
+
+INLEDNING:
+  order: 1
+  required: true
+  named_entities:
+    - message: Texten under rubriken INLEDNING behöver en tidpunkt.
+      identity: TIMEX
+      cheat: \d{1,2}[:|\.]\d{1,2}
+    - message: Texten under rubriken INLEDNING behöver en geografisk adress/plats.
+      identity: ENAMEX
+      type: LOC
+
+ÅTALSANGIVELSE:
+  order: 2
+
+BROTTET:
+  order: 2
+
+BROTTEN:
+  order: 2
+
+HÄNDELSEN:
+  order: 2
+
+TIDIGARE HÄNDELSER:
+  order: 3
+
+VITTNESIAKTTAGELSER:
+  order: 3
+
+HÄNDELSEFÖRLOPP ENLIGT XX:
+  regex: händelseförlopp enligt.+
+  order: 3
+
+SKADOR:
+  order: 4
+
+SIGNALEMENT:
+  order: 5
+  dependencies: [[BROTTET, BROTTEN, HÄNDELSEN]]
+
+ERSÄTTNINGSYRKAN:
+  regex: ersättningsyrkan|ersättningsyrkande
+  order: 6
+
+ÖVRIGT:
+  order: 7
+
+BILAGOR:
+  order: 8
+  regex: bilagor|bilaga
+
+BROTTSPLATSUNDERSÖKNING:
+  dependencies: [[BROTTET, BROTTEN]]
+
+TVÅNGSMEDEL: {}
+
+VIDTAGNA ÅTGÄRDER: {}
+
+HATBROTT: {}
+
+TILLGRIPET GODS: {}
+
+PARTERNAS INBÖRDES FÖRHÅLLANDE: {}

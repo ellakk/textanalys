@@ -9,89 +9,39 @@ class Rules:
     """All the rules for the report. The class is static since nothing is supposed to change
     and should never be instansiated."""
 
-    headlines: List[HeadlineRules] = []
-    lix_max: float
-    lix_min: float
-    spelling_skip_wordclasses: List[str] = []
-    forbidden_words: List[str] = []
-
     def __init__(self):
+        self.headlines: List[HeadlineRules] = []
         self._init_headline_rules()
-        self._init_lix()
-        self._init_spell_skip()
-        self._init_forbidden_words()
 
-    def _init_forbidden_words(self):
+        self.lix_max: float
+        self.lix_min: float
+        self.spelling_skip_wordclasses: List[str] = []
+        self.citation_delimiters: List[str] = []
+        with open("settings/rules/rules.yaml", "r") as file:
+            rules = yaml.load(file, Loader=yaml.FullLoader)
+            self.lix_min = rules["lix"]["min"]
+            self.lix_max = rules["lix"]["max"]
+            self.spelling_skip_wordclasses = rules["spelling_skip_wordclasses"]
+            self.citation_delimiters = rules["citation_delimiters"]
+
+        self.forbidden_words: List[str] = []
         with open("settings/rules/forbidden_words.yaml", "r") as file:
             self.forbidden_words = yaml.load(file, Loader=yaml.FullLoader)
 
     def _init_headline_rules(self):
-        self.headlines.append(
-            HeadlineRules(
-                "INLEDNING",
-                order=1,
-                required=True,
-                named_entities=[
-                    NamedEntityRule(
-                        "Texten under rubriken INLEDNING behöver en tidpunkt.",
-                        identity="TIMEX",
-                        cheat=r"\d{1,2}[:|\.]\d{1,2}",
-                    ),
-                    NamedEntityRule(
-                        "Texten under rubriken INLEDNING behöver en geografisk adress/plats.",
-                        identity="ENAMEX",
-                        type="LOC",
-                    ),
-                ],
-            )
-        )
-        self.headlines.append(HeadlineRules("ÅTALSANGIVELSE", order=2))
-        self.headlines.append(HeadlineRules("BROTTET", order=2))
-        self.headlines.append(HeadlineRules("BROTTEN", order=2))
-        self.headlines.append(HeadlineRules("HÄNDELSEN", order=2))
-        self.headlines.append(HeadlineRules("TIDIGARE HÄNDELSER", order=3))
-        self.headlines.append(HeadlineRules("VITTNESIAKTTAGELSER", order=3))
-        self.headlines.append(
-            HeadlineRules(
-                "HÄNDELSEFÖRLOPP ENLIGT XX", regex="händelseförlopp enlight.+", order=3
-            )
-        )
-        self.headlines.append(HeadlineRules("SKADOR", order=4))
-        self.headlines.append(
-            HeadlineRules(
-                "SIGNALEMENT",
-                order=5,
-                dependencies=[["BROTTET", "BROTTEN", "HÄNDELSEN"]],
-            )
-        )
-        self.headlines.append(
-            HeadlineRules(
-                "ERSÄTTNINGSYRKAN", regex="ersättningsyrkan|ersättningsyrkande", order=6
-            )
-        )
-        self.headlines.append(HeadlineRules("ÖVRIGT", order=7))
-        self.headlines.append(
-            HeadlineRules("BILAGOR", regex="bilagor|bilaga", order=9999)
-        )
+        rules = {}
+        with open("settings/rules/headlines.yaml", "r") as file:
+            rules = yaml.load(file, Loader=yaml.FullLoader)
 
-        self.headlines.append(
-            HeadlineRules(
-                "BROTTSPLATSUNDERSÖKNING", dependencies=[["BROTTET", "BROTTEN"]]
+        for hname, hrules in rules.items():
+            if "named_entities" in hrules:
+                hrules["named_entities"] = [
+                    NamedEntityRule(**ne) for ne in hrules["named_entities"]
+                ]
+
+            self.headlines.append(
+                HeadlineRules(name=hname, **hrules)
             )
-        )
-        self.headlines.append(HeadlineRules("TVÅNGSMEDEL"))
-        self.headlines.append(HeadlineRules("VIDTAGNA ÅTGÄRDER"))
-        self.headlines.append(HeadlineRules("HATBROTT"))
-        self.headlines.append(HeadlineRules("TILLGRIPET GODS"))
-        self.headlines.append(HeadlineRules("PARTERNAS INBÖRDES FÖRHÅLLANDE"))
-
-    def _init_lix(self):
-        self.lix_max = 56.7
-        self.lix_min = 32.6
-
-    def _init_spell_skip(self):
-        self.spelling_skip_wordclasses.append("PM")  # names
-        self.spelling_skip_wordclasses.append("AN")  # abbreviations
 
     def get_headline_rules(self, candidate: str) -> Optional[HeadlineRules]:
         """Try to get the headline rules matching the candidate."""

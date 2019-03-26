@@ -1,0 +1,16 @@
+# Miniumum and maxium Lix score for a rapport
+lix:
+  min: 32.6
+  max: 56.7
+
+# Words that are tagged with these wordclasses are skipped during the spell check
+spelling_skip_wordclasses:
+  - PM                          # names
+  - AN                          # abbreviations
+
+# Marks the start and end of citations
+citation_delimiters:
+  - "'"
+  - "\""
+  - "”"
+  - "“"

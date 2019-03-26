@@ -195,10 +195,9 @@ class Analyzer:
     def test_forbidden_words(self) -> None:
         """Test if a list of forbidden words exists in text."""
         # Move this to a separate file
-        pads: List[str] = ["'", '"', "”", "“"]
         pad_open: bool = False
         for word in self.report.get_words():
-            if word.text in pads:
+            if word.text in self.rules.citation_delimiters:
                 pad_open = not pad_open
                 continue
             if pad_open:
