@@ -88,7 +88,8 @@ class Analyzer:
         if self.report.document.paragraphs:
             self.add_error(
                 "Rubrikerna i dokumentet är felformaterade eller saknas. "
-                "Rubrikerna ska vara skrivna i versaler."
+                "Rubrikerna ska vara skrivna i versaler och ha samma "
+                "typsnitt, stil och storlek som brödtexten."
             )
 
         if not self.report.document.paragraphs:
