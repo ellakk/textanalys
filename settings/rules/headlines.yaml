@@ -23,26 +23,15 @@ INLEDNING:
       identity: ENAMEX
       type: LOC
 
-ÅTALSANGIVELSE:
-  order: 2
-
 BROTTET:
-  order: 2
-
-BROTTEN:
+  regex: brottet|brotten
   order: 2
 
 HÄNDELSEN:
   order: 2
 
-TIDIGARE HÄNDELSER:
-  order: 3
-
-VITTNESIAKTTAGELSER:
-  order: 3
-
-HÄNDELSEFÖRLOPP ENLIGT XX:
-  regex: händelseförlopp enligt.+
+HÄNDELSEFÖRLOPP:
+  regex: händelseförlopp enligt.+|händelseförlopp|händelseförloppet
   order: 3
 
 SKADOR:
@@ -50,21 +39,29 @@ SKADOR:
 
 SIGNALEMENT:
   order: 5
-  dependencies: [[BROTTET, BROTTEN, HÄNDELSEN]]
+  dependencies: [[BROTTET, HÄNDELSEN]]
 
 ERSÄTTNINGSYRKAN:
   regex: ersättningsyrkan|ersättningsyrkande
   order: 6
 
-ÖVRIGT:
+VITTNESIAKTTAGELSER:
   order: 7
 
-BILAGOR:
-  order: 8
-  regex: bilagor|bilaga
-
 BROTTSPLATSUNDERSÖKNING:
-  dependencies: [[BROTTET, BROTTEN]]
+  order: 8
+  dependencies: [[BROTTET]]
+
+PLATSUNDERSÖKNING:
+  order: 8
+  dependencies: [[HÄNDELSEN]]
+
+ÖVRIGT:
+  order: 9
+
+BILAGOR:
+  order: 10
+  regex: bilagor|bilaga
 
 TVÅNGSMEDEL: {}
 
@@ -75,3 +72,7 @@ HATBROTT: {}
 TILLGRIPET GODS: {}
 
 PARTERNAS INBÖRDES FÖRHÅLLANDE: {}
+
+ÅTALSANGIVELSE: {}
+
+TIDIGARE HÄNDELSER: {}
