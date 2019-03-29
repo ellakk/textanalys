@@ -1,11 +1,13 @@
 import re
-from typing import List, Optional, Union, Tuple, Dict, Any, Callable
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
+from fuzzywuzzy import fuzz, process
+
+from src.report.headline import Headline
 from src.report.report import Report
 from src.report.word import Word
-from src.report.headline import Headline
-from src.rules.rules import Rules
 from src.rules.rule_structures import HeadlineRules
+from src.rules.rules import Rules
 
 
 class Analyzer:
@@ -93,14 +95,20 @@ class Analyzer:
             )
 
         if not self.report.document.paragraphs:
-            self.add_error("Ditt dokument är antigen tomt eller i fel format")
+            self.add_error("Ditt dokument är antigen tomt eller i fel format.")
 
     def test_headlines_predefined(self) -> None:
         """Test to make sure the headlines exists in the list of predefined ones."""
         for headline in self.report.headlines:
             if not self.rules.get_headline_rules(headline.name):
+                headlines = [headline.name for headline in self.rules.headlines]
+                suggestion, _ = process.extractOne(
+                    headline.name, headlines, scorer=fuzz.partial_ratio
+                )
                 self.add_error(
-                    f"{headline.name} är inte en valid rubrik.", headline=headline
+                    f"{headline.name} är inte en valid rubrik. "
+                    f"Rättningsförlsag: {suggestion}.",
+                    headline=headline,
                 )
             elif re.search("\\W{1,}", headline.name, re.I):
                 self.add_error(
