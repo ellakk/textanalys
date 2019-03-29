@@ -13,6 +13,7 @@ python-docx = "*"
 requests = "*"
 pyyaml = "*"
 fuzzywuzzy = "*"
+python-levenshtein = "*"
 
 [requires]
 python_version = "3.7"
