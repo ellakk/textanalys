@@ -2,7 +2,7 @@
 
 # INLEDNING:                      # Name of the headline. Will be used to match headline before regex is tried.
 #    order: 1                     # Expected order compared to the other ordered headlines
-#    regex: .+                    # Regular expression that matches headline. Will be used after the named is tried.
+#    regex: .+                    # Regular expression that matches headline. Will be used after the named is tried. Anchors will be added to start and end of the regex.
 #    required: true               # If the headline is required.
 #    dependencies: [[d1, d1.2], [d2]]  # List of other headlines that has to be present for this headline.
 #    named_entities:              # Named entities that has to be present for this headline.
@@ -24,7 +24,9 @@ INLEDNING:
       type: LOC
 
 BROTTET:
-  regex: brottet|brotten
+  order: 2
+
+BROTTEN:
   order: 2
 
 HÄNDELSEN:
@@ -39,7 +41,7 @@ SKADOR:
 
 SIGNALEMENT:
   order: 5
-  dependencies: [[BROTTET, HÄNDELSEN]]
+  dependencies: [[BROTTET, BROTTEN, HÄNDELSEN]]
 
 ERSÄTTNINGSYRKAN:
   regex: ersättningsyrkan|ersättningsyrkande
@@ -50,7 +52,7 @@ VITTNESIAKTTAGELSER:
 
 BROTTSPLATSUNDERSÖKNING:
   order: 8
-  dependencies: [[BROTTET]]
+  dependencies: [[BROTTET, BROTTEN]]
 
 PLATSUNDERSÖKNING:
   order: 8
