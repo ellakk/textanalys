@@ -12,6 +12,7 @@ flask = "*"
 python-docx = "*"
 requests = "*"
 pyyaml = "*"
+fuzzywuzzy = "*"
 
 [requires]
 python_version = "3.7"
