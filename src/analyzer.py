@@ -102,7 +102,7 @@ class Analyzer:
                 self.add_error(
                     f"{headline.name} är inte en valid rubrik.", headline=headline
                 )
-            elif re.match("^.+\\W{1,}$", headline.name, re.I):
+            elif re.search("\\W{1,}", headline.name, re.I):
                 self.add_error(
                     f"Rubriken {headline.name} innehåller tecken som inte är "
                     "alfanumeriska vilket inte är tillåtet för en rubrik.",

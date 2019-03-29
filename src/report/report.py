@@ -56,7 +56,7 @@ class Report:
         for paragraph in self.document.paragraphs:
             text: str = paragraph.text.strip()
             # Is it a headline or just text
-            if re.match(r"(^\w+\s?\w+\s?\w+\s?\:?$)", text) and text.isupper():
+            if re.match(r"(^\w+\s?\/?\w+\s?\/?\w+\s?\/?\:?$)", text) and text.isupper():
                 current_headline = ET.SubElement(
                     root_node, "paragraph", attrib={"name": text}
                 )
