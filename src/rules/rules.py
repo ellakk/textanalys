@@ -19,6 +19,7 @@ class Rules:
         self.citation_delimiters: List[str] = []
         self.grammar_rules: List[Dict[str, str]]
         self.unwanted_words: List[Dict[str, str]]
+        self.police_abbreviations: List[Dict[str, str]]
         with open("settings/rules/rules.yaml", "r") as file:
             rules = yaml.load(file, Loader=yaml.FullLoader)
             self.lix_min = rules["lix"]["min"]
@@ -27,6 +28,7 @@ class Rules:
             self.citation_delimiters = rules["citation_delimiters"]
             self.grammar_regex = rules["grammar_regex"]
             self.unwanted_words = rules["unwanted_words"]
+            self.police_abbreviations = rules["police_abbreviations"]
 
         self.forbidden_words: List[str] = []
         with open("settings/rules/forbidden_words.yaml", "r") as file:

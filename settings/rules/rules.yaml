@@ -43,3 +43,11 @@ unwanted_words:
   - { word: gälda, alternative: betala }
   - { word: åligga, alternative: ska }
   - { word: jämlikt, alternative: enligt }
+
+# List of police abbreviations.
+police_abbreviations:
+  - { word: pa, means: polisaspirant }
+  - { word: pasp, means: polisaspirant }
+  - { word: gm, means: gärningsman }
+  - { word: mä, means: misstänkt }
+  - { word: mt, means: misstänkt }

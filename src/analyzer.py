@@ -72,6 +72,7 @@ class Analyzer:
             self.test_reading_attributes,
             self.test_forbidden_words,
             self.test_unwanted_words,
+            self.test_unwanted_police_abbreviations,
             self.test_spelling,
             self.test_grammar_rules_regex,
         ]
@@ -246,13 +247,28 @@ class Analyzer:
                     )
                     break
 
+    def test_unwanted_police_abbreviations(self):
+        """Test if the report contains any unwanted police abbreviations."""
+        for word in self.report.get_words():
+            for uword in self.rules.police_abbreviations:
+                if uword["word"] == word.text.lower():
+                    self.add_error(
+                        f"{word.text} är en intern förkortning. "
+                        f"Använd {uword['means']} istället.",
+                        word=word,
+                    )
+
     def test_spelling(self) -> None:
         """Test the spelling in the report."""
         misstakes: Dict[Word, List[str]] = self.report.spellcheck(
             self.rules.spelling_skip_wordclasses
         )
         for word, corrections in misstakes.items():
-            if word.text in self.rules.forbidden_words:
+            if word.text.lower() in self.rules.forbidden_words:
+                continue
+            if word.text.lower() in [
+                ab["word"] for ab in self.rules.police_abbreviations
+            ]:
                 continue
             error_text: str = f"Ordet {word.text} är felstavat."
             if corrections:
