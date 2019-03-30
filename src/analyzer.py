@@ -91,7 +91,8 @@ class Analyzer:
             self.add_error(
                 "Rubrikerna i dokumentet är felformaterade eller saknas. "
                 "Rubrikerna ska vara skrivna i versaler och ha samma "
-                "typsnitt, stil och storlek som brödtexten."
+                "typsnitt, stil och storlek som brödtexten. "
+                "Rubriker avslutas med radbrytning."
             )
 
         if not self.report.document.paragraphs:
@@ -255,7 +256,7 @@ class Analyzer:
                 continue
             error_text: str = f"Ordet {word.text} är felstavat."
             if corrections:
-                error_text += " Rättningsförslag: " + ", ".join(corrections)
+                error_text += " Rättningsförslag: " + ", ".join(corrections) + "."
             self.add_error(error_text, word=word)
 
     def test_grammar_rules_regex(self) -> None:
