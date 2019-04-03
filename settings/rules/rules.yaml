@@ -5,8 +5,8 @@ lix:
 
 # Words that are tagged with these wordclasses are skipped during the spell check.
 spelling_skip_wordclasses:
-  - PM                          # names
   - AN                          # abbreviations
+  - PM                          # names
 
 # Marks the start and end of citations.
 citation_delimiters:
@@ -18,31 +18,33 @@ citation_delimiters:
 # Regex's that match unwanted grammar.
 grammar_regex:
   - { regex: " {2,}", message: Mer än ett mellanslag. }
+  - { regex: "(?<!\\d)\\D{1}([1-9][0-2]?)\\D{1}(?!\\d)", message: Nummer mellan noll och tolv ska skrivas med bokstäver. }
 
 # List of unwanted words and suggestions what to use instead, does not match cited text.
 # These are suggestions found in the offical police documentation guidelines.
 unwanted_words:
-  - { word: handha, alternative: ha hand om instället }
-  - { word: ianspråkta, alternative: ta i anspråk }
-  - { word: ikraftträda, alternative: träda i kraft }
-  - { word: inbetala, alternative: betala in }
-  - { word: medfölja, alternative: följa med }
-  - { word: medtaga, alternative: ta med }
-  - { word: mottaga, alternative: ta emot }
-  - { word: överenskomma, alternative: komma överens }
-  - { word: efterhöra, alternative: höra efter }
-  - { word: inkomma, alternative: komma in }
-  - { word: återlämna, alternative: lämna tillbaka }
   - { word: avvaktan, alternative: väntan }
   - { word: därest, alternative: om }
+  - { word: efterhöra, alternative: höra efter }
   - { word: ej, alternative: inte }
   - { word: enär, alternative: eftersom, därför att }
   - { word: erfordras, alternative: behövs }
   - { word: erlägga, alternative: betala }
   - { word: föreligga, alternative: finnas }
   - { word: gälda, alternative: betala }
-  - { word: åligga, alternative: ska }
+  - { word: handha, alternative: ha hand om instället }
+  - { word: ianspråkta, alternative: ta i anspråk }
+  - { word: ikraftträda, alternative: träda i kraft }
+  - { word: inbetala, alternative: betala in }
+  - { word: inkomma, alternative: komma in }
   - { word: jämlikt, alternative: enligt }
+  - { word: medfölja, alternative: följa med }
+  - { word: medtaga, alternative: ta med }
+  - { word: mottaga, alternative: ta emot }
+  - { word: skall, alternative: ska }
+  - { word: åligga, alternative: ska }
+  - { word: återlämna, alternative: lämna tillbaka }
+  - { word: överenskomma, alternative: komma överens }
 
 # List of police abbreviations.
 police_abbreviations:
