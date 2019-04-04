@@ -125,9 +125,15 @@ class Report:
             return match.span()
         return 0, 0
 
-    def get_regex_postions(self, regex) -> List[Tuple[int, int]]:
+    def get_regex_postions(
+        self, regex: str, ignore_case: bool = False
+    ) -> List[Tuple[int, int]]:
         """Returns the start and end postions of all found regex matches."""
-        matches: Iterator[Match[str]] = re.finditer(regex, self.to_text())
+        matches: Iterator[Match[str]]
+        if ignore_case:
+            matches = re.finditer(regex, self.to_text(), re.I)
+        else:
+            matches = re.finditer(regex, self.to_text())
         return [match.span() for match in matches]
 
     def get_headline_position(self, headline: Headline) -> Tuple[int, int]:

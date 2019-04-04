@@ -279,7 +279,7 @@ class Analyzer:
         """Test grammatical rules by matching against regex'es."""
         for rule in self.rules.grammar_regex:
             positions: List[Tuple[int, int]] = self.report.get_regex_postions(
-                rule["regex"]
+                rule["regex"], ignore_case=True
             )
             for position in positions:
                 self.add_error(rule["message"], position=position)

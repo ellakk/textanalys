@@ -17,10 +17,12 @@ citation_delimiters:
 
 # Regex's that match unwanted grammar.
 grammar_regex:
-  - { regex: " {2,}", message: Mer än ett mellanslag. }
-  - { regex: "(?<!\\d)\\D{1}([1-9][0-2]?)\\D{1}(?!\\d)", message: Nummer mellan noll och tolv ska skrivas med bokstäver. }
-  - { regex: "(?<!\\d)\\d{1,4}[-\\.]\\d{1,2}[-\\.]\\d{1,2}(?!\\d)|(?<!\\d)\\d{1,2}[-\\.]\\d{1,2}[-\\.]\\d{1,4}(?!\\d)",
-  message: Datum ska skrivas den 3 juni 2003 eftersom det skrivsättet är mest läsbart. }
+  - regex: " {2,}"
+    message: Mer än ett mellanslag.
+  - regex: "(?<!\\d)\\D{1}([1-9][0-2]?)\\D{1}(?!\\d|januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)(?<!\\d)\\D{1}([1-9][0-2]?)\\D{1}(?!\\d)"
+    message: Nummer mellan noll och tolv ska skrivas med bokstäver.
+  - regex: "(?<!\\d)\\d{1,4}[-\\.]\\d{1,2}[-\\.]\\d{1,2}(?!\\d)|(?<!\\d)\\d{1,2}[-\\.]\\d{1,2}[-\\.]\\d{1,4}(?!\\d)"
+    message: Datum ska skrivas den 3 juni 2003 eftersom det skrivsättet är mest läsbart.
 
 # List of unwanted words and suggestions what to use instead, does not match cited text.
 # These are suggestions found in the offical police documentation guidelines.
