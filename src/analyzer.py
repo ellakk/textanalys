@@ -69,6 +69,7 @@ class Analyzer:
             self.test_headlines_dependencies,
             self.test_headlines_order,
             self.test_headlines_named_entities,
+            self.test_named_entities,
             self.test_reading_attributes,
             self.test_forbidden_words,
             self.test_unwanted_words,
@@ -211,6 +212,28 @@ class Analyzer:
             self.add_error(
                 "LIX värdet för rapporten är lågt. Försök skriva längre meningar."
             )
+
+    def test_named_entities(self) -> None:
+        """Test global named entity rules."""
+        for named_entitity_rule in self.rules.named_entities:
+            identity: str = named_entitity_rule["identity"]
+            type: Optional[str] = named_entitity_rule.get("type")
+            subtype: Optional[str] = named_entitity_rule.get("subtype")
+            invalid: Optional[str] = named_entitity_rule.get("invalid")
+            valid: Optional[str] = named_entitity_rule.get("valid")
+
+            for named_entity in self.report.get_named_entities(identity, type, subtype):
+                text: str = " ".join([w.text for w in named_entity.words])
+                if valid and (not re.search(valid, text, re.I)):
+                    self.add_error(
+                        named_entitity_rule["message"],
+                        self.report.get_words_position(named_entity.words),
+                    )
+                elif invalid and re.search(invalid, text, re.I):
+                    self.add_error(
+                        named_entitity_rule["message"],
+                        self.report.get_words_position(named_entity.words),
+                    )
 
     def test_forbidden_words(self) -> None:
         """Test if there are any sensitive/swear words outside of the citations."""

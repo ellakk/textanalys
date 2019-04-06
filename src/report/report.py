@@ -11,6 +11,7 @@ from docx import Document
 
 from src.report.headline import Headline
 from src.report.word import Word
+from src.report.named_entity import NamedEntity
 
 
 class Report:
@@ -118,6 +119,27 @@ class Report:
 
         raise Exception(f"Sparv returned unexpected code: {response.status_code}")
 
+    def get_named_entities(
+        self,
+        identity: Optional[str] = None,
+        type: Optional[str] = None,
+        subtype: Optional[str] = None,
+    ) -> List[NamedEntity]:
+        """Returns a list of named entities from the report that matches the
+        specifications."""
+        found: List[NamedEntity] = []
+        for named_entity in [
+            e for h in self.headlines for s in h.sentences for e in s.named_entities
+        ]:
+            if identity and (identity != named_entity.identity):
+                continue
+            if type and (type != named_entity.type):
+                continue
+            if subtype and (subtype != named_entity.subtype):
+                continue
+            found.append(named_entity)
+        return found
+
     def get_regex_position(self, regex) -> Tuple[int, int]:
         """Returns the start and end position of the first match of regex."""
         match: Optional[Match[str]] = re.search(regex, self.to_text())
@@ -153,7 +175,15 @@ class Report:
                 return (current_position, current_position + len(w.text))
         return 0, 0
 
+    def get_words_position(self, words: List[Word]) -> Tuple[int, int]:
+        """Get start position of the first word and end position of the last word. Useful when
+        you want to determine the position of a sequence of words."""
+        start: int = self.get_word_postion(words[0])[0]
+        end: int = self.get_word_postion(words[-1])[1]
+        return start, end
+
     def get_words(self, skip_wordclasses: List[str] = []) -> List[Word]:
+        """Get all words in the report, excluding headline titles."""
         return [
             word
             for headline in self.headlines
