@@ -16,12 +16,12 @@ INLEDNING:
   order: 1
   required: true
   named_entities:
-    - message: Texten under rubriken INLEDNING behöver en tidpunkt.
-      identity: TIMEX
-      cheat: \d{1,2}[:|\.]\d{1,2}
-    - message: Texten under rubriken INLEDNING behöver en geografisk adress/plats.
-      identity: ENAMEX
-      type: LOC
+    - message: "Texten under rubriken INLEDNING behöver en tidpunkt."
+      identity: "TIMEX"
+      cheat: "\\d{1,2}[:|\\.]\\d{1,2}"
+    - message: "Texten under rubriken INLEDNING behöver en geografisk adress/plats."
+      identity: "ENAMEX"
+      type: "LOC"
 
 BROTTET:
   order: 2
@@ -33,7 +33,7 @@ HÄNDELSEN:
   order: 2
 
 HÄNDELSEFÖRLOPP:
-  regex: händelseförlopp enligt.+|händelseförlopp|händelseförloppet
+  regex: "händelseförlopp enligt.+|händelseförlopp|händelseförloppet"
   order: 3
 
 SKADOR:
@@ -41,10 +41,10 @@ SKADOR:
 
 SIGNALEMENT:
   order: 5
-  dependencies: [[BROTTET, BROTTEN, HÄNDELSEN]]
+  dependencies: [["BROTTET", "BROTTEN", "HÄNDELSEN"]]
 
 ERSÄTTNINGSYRKAN:
-  regex: ersättningsyrkan|ersättningsyrkande
+  regex: "ersättningsyrkan|ersättningsyrkande"
   order: 6
 
 VITTNESIAKTTAGELSER:
@@ -52,18 +52,18 @@ VITTNESIAKTTAGELSER:
 
 BROTTSPLATSUNDERSÖKNING:
   order: 8
-  dependencies: [[BROTTET, BROTTEN]]
+  dependencies: [["BROTTET", "BROTTEN"]]
 
 PLATSUNDERSÖKNING:
   order: 8
-  dependencies: [[HÄNDELSEN]]
+  dependencies: [["HÄNDELSEN"]]
 
 ÖVRIGT:
   order: 9
 
 BILAGOR:
   order: 10
-  regex: bilagor|bilaga
+  regex: "bilagor|bilaga"
 
 TVÅNGSMEDEL: {}
 
