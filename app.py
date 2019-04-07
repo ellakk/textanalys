@@ -45,6 +45,12 @@ def start() -> str:
     return render_template("index.html")
 
 
+@APP.route("/canvas", methods=["GET"])
+def canvas() -> str:
+    """This route serves a test interface thats made to look like canvas."""
+    return render_template("canvas.html")
+
+
 @APP.route("/api/docx", methods=["POST"])
 def docx_post() -> wrappers.Response:
     """This is the API route to analyze docx files."""
