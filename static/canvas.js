@@ -24,9 +24,6 @@ window.addEventListener('load', () => {
     $('#submitButton').attr('disabled', true)
     sendData()
   })
-  $('#goBack').click(() => {
-    $('#docxSelector').val('')
-  })
   $('#ignoreAndSubmit').click(missionComplete)
   $('#turnInSpinner').hide()
   $('#inlamning-ruta').hide()
@@ -67,6 +64,7 @@ const processData = (JSONdata) => {
 
   var table = $('#analysisTable')
   var document = $('#document')
+  $('#docxSelector').val('')
 
   // Clear the table
   table.find('button').remove()

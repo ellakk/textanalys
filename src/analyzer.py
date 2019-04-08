@@ -265,7 +265,7 @@ class Analyzer:
                 if word.text == u_word["word"]:
                     self.add_error(
                         f"Ordet {word.text} är inte tillåtet, "
-                        f"använd hellre: {u_word['alternative']}.",
+                        f"använd {u_word['alternative']} istället.",
                         word=word,
                     )
                     break
