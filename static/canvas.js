@@ -1,5 +1,5 @@
 // Declare globals to satisfy standardJS
-/* global XMLHttpRequest FormData $ */
+/* global XMLHttpRequest FormData alert $ */
 
 /**
  * Add method to count keys in object.
@@ -20,9 +20,13 @@ window.addEventListener('load', () => {
   var form = document.getElementById('docxForm')
   form.addEventListener('submit', (event) => {
     event.preventDefault()
+    $('#submitButton').text('Analyserar')
+    $('#submitButton').attr('disabled', true)
+    $('#turnInSpinner').show()
     sendData()
-    $('#analys-modal').modal('show')
   })
+  $('#ignoreAndSubmit').click(missionComplete)
+  $('#turnInSpinner').hide()
   $('#inlamning-ruta').hide()
   $('#lamna-in').click(() => {
     $('#inlamning-ruta').show()
@@ -47,6 +51,13 @@ const sendAlert = (message) => {
 }
 
 /**
+ * Notify the user that the assignment is submitted
+ */
+const missionComplete = () => {
+  alert('Du klarade det! Tested är över! :)')
+}
+
+/**
  * Process the API response.
  */
 const processData = (JSONdata) => {
@@ -65,13 +76,19 @@ const processData = (JSONdata) => {
 
   if (data.data.has_errors) {
     data.data.errors.forEach((row) => {
-      table.append('<button type="button" class="error-rows list-group-item list-group-item-action" data-start="' + row.start + '"' +
+      table.append('<button type="button" class="error-rows list-group-item-danger list-group-item-action" data-start="' + row.start + '"' +
                    ' data-end="' + row.end + '">' + row.message + '</button>')
     })
+    document.text(data.data.report)
+    highlightErrors()
+    changeCursorOnError()
+    $('#analys-modal').modal('show')
+  } else {
+    missionComplete()
   }
-  document.text(data.data.report)
-  highlightErrors()
-  changeCursorOnError()
+  $('#submitButton').attr('disabled', false)
+  $('#turnInSpinner').hide()
+  $('#submitButton').text('Lämna in')
 }
 
 /**
