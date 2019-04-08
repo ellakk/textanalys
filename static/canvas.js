@@ -24,6 +24,9 @@ window.addEventListener('load', () => {
     $('#submitButton').attr('disabled', true)
     sendData()
   })
+  $('#goBack').click(() => {
+    $('#docxSelector').val('')
+  })
   $('#ignoreAndSubmit').click(missionComplete)
   $('#turnInSpinner').hide()
   $('#inlamning-ruta').hide()
