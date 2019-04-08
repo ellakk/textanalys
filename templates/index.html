@@ -1,57 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Rättsäker Textanalys</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
 
-<head>
-  <title>Rättsäker Textanalys</title>
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta charset="UTF-8">
+    <link rel="stylesheet" href="static/lib/bootstrap/bootstrap.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js"
+      integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U="
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript" src="static/script.js"></script>
+    <link rel="stylesheet" href="static/style.css" />
+  </head>
 
-  <link rel="stylesheet" href="static/lib/bootstrap/bootstrap.css">
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="static/script.js"></script>
-  <link rel="stylesheet" href="static/style.css">
-</head>
-
-<body>
-  <div class="container">
-    <div class="jumbotron">
-      <h1 class="display-3">Rättsäker Textanalys</h1>
-      <p class="lead">Detta är en webbapplikation går ut på att vi har skrivit
-      ett program som analyserar polisrapporter och rapporterar de fel som
-      hittas. Applikation är skriven av Kalle Lindqvist och Henrik Svensson.</p>
-      <hr class="my-4">
-      <p>Välj en polisrapport i .docx-format och tryck analysera för att göra en analys.</p>
-      <p class="lead">
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1 class="display-3">Rättsäker Textanalys</h1>
+        <p class="lead">
+          Detta är en webbapplikation går ut på att vi har skrivit ett program
+          som analyserar polisrapporter och rapporterar de fel som hittas.
+          Applikation är skriven av Kalle Lindqvist och Henrik Svensson.
+        </p>
+        <hr class="my-4" />
+        <p>
+          Välj en polisrapport i .docx-format och tryck analysera för att göra
+          en analys.
+        </p>
         <form class="form-inline" id="docxForm">
           <div class="form-group mx-sm-3 mb-2">
-            <input type="file" class="form-control-file" id="docxSelector">
+            <input type="file" class="form-control-file" id="docxSelector" />
           </div>
-          <button type="submit" class="btn btn-primary mb-2" id="submitButton">Analysera</button>
+          <button type="submit" class="btn btn-primary mb-2" id="submitButton">
+            Analysera
+          </button>
         </form>
-      </p>
-      <hr class="my-4">
-      <h2 class="display-4">Analys</h2>
-      <table class="table table-hover" id="analysisTable">
-        <caption id="analysisTableCaption"></caption>
-        <thead>
-          <tr>
-            <th scope="col">Position</th>
-            <th scope="col">Fel</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-      <h2 class="display-4">Document</h2>
-      <pre id="document"></pre>
+        <hr class="my-4" />
+        <h2 class="display-4">Analys</h2>
+        <table class="table table-hover" id="analysisTable">
+          <caption id="analysisTableCaption"></caption>
+          <thead>
+            <tr>
+              <th scope="col">Position</th>
+              <th scope="col">Fel</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <h2 class="display-4">Document</h2>
+        <pre id="document"></pre>
+      </div>
     </div>
-
-  </div>
-</body>
-
+  </body>
 </html>
