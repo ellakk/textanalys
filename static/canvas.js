@@ -20,9 +20,8 @@ window.addEventListener('load', () => {
   var form = document.getElementById('docxForm')
   form.addEventListener('submit', (event) => {
     event.preventDefault()
-    $('#submitButton').text('Analyserar')
-    $('#submitButton').attr('disabled', true)
     $('#turnInSpinner').show()
+    $('#submitButton').attr('disabled', true)
     sendData()
   })
   $('#ignoreAndSubmit').click(missionComplete)
@@ -63,18 +62,15 @@ const missionComplete = () => {
 const processData = (JSONdata) => {
   var data = JSON.parse(JSONdata)
 
-  if (data.code !== 200) {
-    sendAlert(data.message)
-    return
-  }
-
   var table = $('#analysisTable')
   var document = $('#document')
 
   // Clear the table
   table.find('button').remove()
 
-  if (data.data.has_errors) {
+  if (data.code !== 200) {
+    sendAlert(data.message)
+  } else if (data.data.has_errors) {
     data.data.errors.forEach((row) => {
       table.append('<button type="button" class="error-rows list-group-item-danger list-group-item-action" data-start="' + row.start + '"' +
                    ' data-end="' + row.end + '">' + row.message + '</button>')
@@ -88,7 +84,6 @@ const processData = (JSONdata) => {
   }
   $('#submitButton').attr('disabled', false)
   $('#turnInSpinner').hide()
-  $('#submitButton').text('Lämna in')
 }
 
 /**
