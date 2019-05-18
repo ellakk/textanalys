@@ -1,0 +1,22 @@
+- { word: "avvaktan", alternative: "väntan" }
+- { word: "därest", alternative: "om" }
+- { word: "efterhöra", alternative: "höra efter" }
+- { word: "ej", alternative: "inte" }
+- { word: "enär", alternative: "eftersom, därför att" }
+- { word: "erfordras", alternative: "behövs" }
+- { word: "erlägga", alternative: "betala" }
+- { word: "föreligga", alternative: "finnas" }
+- { word: "gälda", alternative: "betala" }
+- { word: "handha", alternative: "ha hand om instället" }
+- { word: "ianspråkta", alternative: "ta i anspråk" }
+- { word: "ikraftträda", alternative: "träda i kraft" }
+- { word: "inbetala", alternative: "betala in" }
+- { word: "inkomma", alternative: "komma in" }
+- { word: "jämlikt", alternative: "enligt" }
+- { word: "medfölja", alternative: "följa med" }
+- { word: "medtaga", alternative: "ta med" }
+- { word: "mottaga", alternative: "ta emot" }
+- { word: "skall", alternative: "ska" }
+- { word: "åligga", alternative: "ska" }
+- { word: "återlämna", alternative: "lämna tillbaka" }
+- { word: "överenskomma", alternative: "komma överens" }

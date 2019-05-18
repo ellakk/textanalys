@@ -34,38 +34,3 @@ named_entities:
     type: "TME"
     subtype: "DAT"
     invalid: "(?<!\\d)\\d{1,4}[-\\.]\\d{1,2}[-\\.]\\d{1,2}(?!\\d)|(?<!\\d)\\d{1,2}[-\\.]\\d{1,2}[-\\.]\\d{1,4}(?!\\d)"
-
-
-# List of unwanted words and suggestions what to use instead, does not match cited text.
-# These are suggestions found in the offical police documentation guidelines.
-unwanted_words:
-  - { word: "avvaktan", alternative: "väntan" }
-  - { word: "därest", alternative: "om" }
-  - { word: "efterhöra", alternative: "höra efter" }
-  - { word: "ej", alternative: "inte" }
-  - { word: "enär", alternative: "eftersom, därför att" }
-  - { word: "erfordras", alternative: "behövs" }
-  - { word: "erlägga", alternative: "betala" }
-  - { word: "föreligga", alternative: "finnas" }
-  - { word: "gälda", alternative: "betala" }
-  - { word: "handha", alternative: "ha hand om instället" }
-  - { word: "ianspråkta", alternative: "ta i anspråk" }
-  - { word: "ikraftträda", alternative: "träda i kraft" }
-  - { word: "inbetala", alternative: "betala in" }
-  - { word: "inkomma", alternative: "komma in" }
-  - { word: "jämlikt", alternative: "enligt" }
-  - { word: "medfölja", alternative: "följa med" }
-  - { word: "medtaga", alternative: "ta med" }
-  - { word: "mottaga", alternative: "ta emot" }
-  - { word: "skall", alternative: "ska" }
-  - { word: "åligga", alternative: "ska" }
-  - { word: "återlämna", alternative: "lämna tillbaka" }
-  - { word: "överenskomma", alternative: "komma överens" }
-
-# List of police abbreviations.
-police_abbreviations:
-  - { word: "pa", means: "polisaspirant" }
-  - { word: "pasp", means: "polisaspirant" }
-  - { word: "gm", means: "gärningsman" }
-  - { word: "mä", means: "misstänkt" }
-  - { word: "mt", means: "misstänkt" }

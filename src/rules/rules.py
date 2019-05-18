@@ -18,8 +18,6 @@ class Rules:
         self.spelling_skip_wordclasses: List[str] = []
         self.citation_delimiters: List[str] = []
         self.grammar_rules: List[Dict[str, str]]
-        self.unwanted_words: List[Dict[str, str]]
-        self.police_abbreviations: List[Dict[str, str]]
         self.named_entities: List[Dict[str, str]]
         with open("settings/rules/rules.yaml", "r") as file:
             rules = yaml.load(file, Loader=yaml.FullLoader)
@@ -28,13 +26,19 @@ class Rules:
             self.spelling_skip_wordclasses = rules["spelling_skip_wordclasses"]
             self.citation_delimiters = rules["citation_delimiters"]
             self.grammar_regex = rules["grammar_regex"]
-            self.unwanted_words = rules["unwanted_words"]
-            self.police_abbreviations = rules["police_abbreviations"]
             self.named_entities = rules["named_entities"]
 
         self.forbidden_words: List[str] = []
         with open("settings/rules/forbidden_words.yaml", "r") as file:
             self.forbidden_words = yaml.load(file, Loader=yaml.FullLoader)
+
+        self.unwanted_words: List[Dict[str, str]]
+        with open("settings/rules/unwanted_words.yaml", "r") as file:
+            self.unwanted_words = yaml.load(file, Loader=yaml.FullLoader)
+
+        self.police_abbreviations: List[Dict[str, str]]
+        with open("settings/rules/police_abbreviations.yaml", "r") as file:
+            self.police_abbreviations = yaml.load(file, Loader=yaml.FullLoader)
 
     def _init_headline_rules(self):
         rules = {}
