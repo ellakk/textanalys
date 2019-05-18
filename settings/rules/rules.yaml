@@ -3,6 +3,11 @@ lix:
   min: 32.6
   max: 56.7
 
+# Miniumum and maxium tonality score for a rapport.
+tonality:
+  min: 0.0
+  max: 0.0
+
 # Words that are tagged with these wordclasses are skipped during the spell check.
 spelling_skip_wordclasses:
   - "AN"                          # abbreviations

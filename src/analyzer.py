@@ -306,3 +306,16 @@ class Analyzer:
             )
             for position in positions:
                 self.add_error(rule["message"], position=position)
+
+    def test_tonality(self) -> None:
+        """Test the tonality of the report."""
+        tonality: float = 0.0
+
+        for word in self.report.get_words():
+            tonality = tonality + word.sentiment
+
+        if tonality < self.rules.tonality_min:
+            self.add_error("Tonaliteten i rapporten är för negativ.")
+
+        if tonality > self.rules.tonality_max:
+            self.add_error("Tonaliteten i rapporten är för positiv.")

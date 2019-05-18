@@ -15,6 +15,8 @@ class Rules:
 
         self.lix_max: float
         self.lix_min: float
+        self.tonality_max: float
+        self.tonality_min: float
         self.spelling_skip_wordclasses: List[str] = []
         self.citation_delimiters: List[str] = []
         self.grammar_rules: List[Dict[str, str]]
@@ -23,6 +25,8 @@ class Rules:
             rules = yaml.load(file, Loader=yaml.FullLoader)
             self.lix_min = rules["lix"]["min"]
             self.lix_max = rules["lix"]["max"]
+            self.tonality_min = rules["tonality"]["min"]
+            self.tonality_max = rules["tonality"]["max"]
             self.spelling_skip_wordclasses = rules["spelling_skip_wordclasses"]
             self.citation_delimiters = rules["citation_delimiters"]
             self.grammar_regex = rules["grammar_regex"]

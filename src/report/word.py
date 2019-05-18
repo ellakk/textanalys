@@ -18,6 +18,9 @@ class Word:
         self.wordclass: str = word_node.attrib["pos"]
         self.morphosyntax: str = word_node.attrib["msd"]
         self.attitude: str = word_node.attrib["sentimentclass"]
+        self.sentiment: float = 0.0
+        if word_node.attrib["sentiment"]:
+            self.sentiment = float(word_node.attrib["sentiment"])
         self.dependency_relation: str = word_node.attrib["deprel"]
         self.reference: str = word_node.attrib["ref"]
         self.dependency_head: str = word_node.attrib["dephead"]
