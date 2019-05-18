@@ -73,7 +73,7 @@ class Analyzer:
             self.test_reading_attributes,
             self.test_forbidden_words,
             self.test_unwanted_words,
-            self.test_unwanted_police_abbreviations,
+            self.test_police_abbreviations,
             self.test_spelling,
             self.test_grammar_rules_regex,
         ]
@@ -270,7 +270,7 @@ class Analyzer:
                     )
                     break
 
-    def test_unwanted_police_abbreviations(self):
+    def test_police_abbreviations(self):
         """Test if the report contains any unwanted police abbreviations."""
         for word in self.report.get_words():
             for uword in self.rules.police_abbreviations:
