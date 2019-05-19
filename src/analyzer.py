@@ -47,7 +47,7 @@ class Analyzer:
         """
         return {
             "report": self.report.to_text(),
-            "errors": self.errors,
+            "errors": sorted(self.errors, key=lambda k: k["start"]),
             "has_errors": self.has_errors(),
         }
 
