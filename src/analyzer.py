@@ -238,7 +238,11 @@ class Analyzer:
     def test_forbidden_words(self) -> None:
         """Test if there are any sensitive/swear words outside of the citations."""
         pad_open: bool = False
-        for word in self.report.get_words():
+        words: List[Word] = self.report.get_words()
+        forbidden_words: List[Word] = []
+        last_error: bool = False
+
+        for word in words:
             if word.text in self.rules.citation_delimiters:
                 pad_open = not pad_open
                 continue
@@ -247,8 +251,16 @@ class Analyzer:
             if (word.text in self.rules.forbidden_words) or any(
                 [b in self.rules.forbidden_words for b in word.baseform]
             ):
+                forbidden_words.append(word)
+                last_error = True
+                continue
+            if last_error:
+                last_error = False
+                combo = " ".join([w.text for w in forbidden_words])
+                start, _ = self.report.get_word_postion(forbidden_words[0])
+                _, end = self.report.get_word_postion(forbidden_words[-1])
                 self.add_error(
-                    f"Ordet {word.text} får endast förekomma i citat.", word=word
+                    f"Ordet {combo} får endast förekomma i citat.", position=(start,end)
                 )
 
     def test_unwanted_words(self) -> None:
