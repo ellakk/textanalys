@@ -73,8 +73,10 @@ const processData = (JSONdata) => {
     sendAlert(data.message)
   } else if (data.data.has_errors) {
     data.data.errors.forEach((row) => {
-      table.append('<button type="button" class="error-rows list-group-item-danger list-group-item-action" data-start="' + row.start + '"' +
+      table.append('<button type="button" class="error-rows list-group-item-danger list-group-item-action selecttextbutton" data-start="' + row.start + '"' +
                    ' data-end="' + row.end + '">' + row.message + '</button>')
+      // table.append('<p class="error-rows" data-start="' + row.start + '"' +
+      //              ' data-end="' + row.end + '">' + row.message + '</p>')
     })
     document.text(data.data.report)
     highlightErrors()
