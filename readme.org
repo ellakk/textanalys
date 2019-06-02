@@ -1,0 +1,28 @@
+* Requirements
+
+** Python 3.7
+
+** Pipenv
+
+** Stava
+
+* Installation
+
+In the project root, run the following command from a terminal to install additional Python dependencies:
+
+#+begin_src sh
+pipenv install
+#+end_src
+
+After the installation is complete, run the following two commands to start the application:
+
+#+begin_src sh
+pipenv shell
+python ./app.py
+#+end_src
+
+The webinterface will be available at the following adress:
+
+#+begin_quote
+http://127.0.0.1:5000/
+#+end_quote
